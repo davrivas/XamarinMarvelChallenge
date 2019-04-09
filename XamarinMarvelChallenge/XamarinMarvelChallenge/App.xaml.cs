@@ -11,7 +11,7 @@ namespace XamarinMarvelChallenge
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new Page();
         }
 
         protected override void OnStart()
