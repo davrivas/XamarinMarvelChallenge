@@ -10,6 +10,6 @@ namespace XamarinMarvelChallenge.Constants
         public readonly string ApiBaseEndpoint = ConfigurationManager.AppSettings["ApiBaseEndpoint"];
         public readonly string PublicKey = ConfigurationManager.AppSettings["PublicKey"];
         public readonly string PrivateKey = ConfigurationManager.AppSettings["PrivateKey"];
-        public const string Attribution = "Data provided by Marvel. © 2014 Marvel";
+        public readonly string Attribution = $"Data provided by Marvel. © {DateTime.Now.Year} Marvel";
     }
 }
