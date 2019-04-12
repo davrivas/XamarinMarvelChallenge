@@ -1,5 +1,6 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinMarvelChallenge.View;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace XamarinMarvelChallenge
@@ -10,7 +11,7 @@ namespace XamarinMarvelChallenge
         {
             InitializeComponent();
 
-            MainPage = new Page();
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()

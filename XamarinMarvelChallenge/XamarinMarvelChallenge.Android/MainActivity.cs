@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using PCLAppConfig;
 
 namespace XamarinMarvelChallenge.Droid
 {
@@ -15,7 +14,6 @@ namespace XamarinMarvelChallenge.Droid
 
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            ConfigurationManager.Initialise(PCLAppConfig.FileSystemStream.PortableStream.Current);
             LoadApplication(new App());
         }
     }

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinMarvelChallenge.View.MainPage">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <!--marvel image-->
+                    <Image Source=""/>
+                    <Entry Placeholder="Search" HorizontalOptions="FillAndExpand"/>
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal">
+                    <!--characters-->
+                    <Image Source=""/>
+                    <Label Text="Characters" HorizontalOptions="StartAndExpand" />
+                    <!--sort by-->
+                    <Picker />
+                </StackLayout>
+
+                <!--este sera el listview-->
+                <StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <!--hero image-->
+                        <Image Source=""/>
+                        <StackLayout>
+                            <Label Text="Hero name" FontAttributes="Bold"/>
+                            <Label Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus turpis ut erat auctor, a."/>
+                            <Button Text="View more" BackgroundColor="Red" TextColor="White" HorizontalOptions="Start"/>
+                        </StackLayout>
+                        <!--related comics-->
+                    </StackLayout>
+                </StackLayout>
+                <!--fin listview-->
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

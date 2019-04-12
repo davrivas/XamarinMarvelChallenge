@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using PCLAppConfig;
 using System;
 using System.Diagnostics;
 using System.Net.Http;
@@ -11,12 +10,12 @@ namespace XamarinMarvelChallenge.MarvelApi
 {
     public class MarvelApi
     {
-        public dynamic Characters { get; } // GetCharacters
-        private readonly HttpClient _client = new HttpClient();
-        private readonly string _apiBaseEndpoint = ConfigurationManager.AppSettings["ApiBaseEndpoint"];
-        private readonly string _publicKey = ConfigurationManager.AppSettings["PublicKey"];
-        private readonly string _privateKey = ConfigurationManager.AppSettings["PrivateKey"];
-        public readonly string Attribution = $"Data provided by Marvel. © {DateTime.Now.Year} Marvel";
+        private readonly HttpClient _client;
+        private const string _apiBaseEndpoint = "https://gateway.marvel.com/v1/public/";
+        private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
+        private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
+
+        public string Attribution => $"Data provided by Marvel. © {DateTime.Now.Year} Marvel";
 
         // example call
         // ts = timestamp
@@ -25,17 +24,17 @@ namespace XamarinMarvelChallenge.MarvelApi
 
         public MarvelApi()
         {
-
+            _client = new HttpClient();
         }
 
         public async Task<dynamic> GetCharacters()
         {
             try
             {
-                var timestamp = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds.ToString();
+                var timestamp = ((DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
                 var hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
                 var hash = CreateHash(hashString);
-                var requestURL = string.Format("{0}/characters?ts={1}&apiKey={2}&hash={3}", _apiBaseEndpoint, timestamp, _privateKey, hash);
+                var requestURL = string.Format("{0}characters?ts={1}&apiKey={2}&hash={3}", _apiBaseEndpoint, timestamp, _publicKey, hash);
                 var url = new Uri(requestURL);
                 var response = await _client.GetAsync(url);
 
@@ -76,6 +75,22 @@ namespace XamarinMarvelChallenge.MarvelApi
             }
 
             return hash;
+
+
+
+            //using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            //{
+            //    byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(hashString);
+            //    byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+            //    // Convert the byte array to hexadecimal string
+            //    StringBuilder sb = new StringBuilder();
+            //    for (int i = 0; i < hashBytes.Length; i++)
+            //    {
+            //        sb.Append(hashBytes[i].ToString("X2"));
+            //    }
+            //    return sb.ToString();
+            //}
         }
     }
 }
