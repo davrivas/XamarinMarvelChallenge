@@ -25,12 +25,21 @@ namespace XamarinMarvelChallenge.MarvelApi
 
         }
 
-        public /*async Task<dynamic>*/ void GetCharacters()
+        public async Task<dynamic> GetCharacters()
         {
             var timestamp = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds.ToString();
             var hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
             var hash = CreateHash(hashString);
             var requestURL = string.Format("{0}/characters?ts={0}&apiKey={1}&hash={2}", _apiBaseEndpoint, timestamp, hash);
+            var url = new Uri(requestURL);
+            var response = await _client.GetAsync(url);
+            string json;
+            using (var content = response.Content)
+            {
+                json = await content.ReadAsStringAsync();
+            }
+
+            return json;
         }
 
         private string CreateHash(string hashString)
