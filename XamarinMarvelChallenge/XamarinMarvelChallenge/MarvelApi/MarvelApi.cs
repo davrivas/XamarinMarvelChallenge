@@ -1,6 +1,7 @@
-﻿using PCLAppConfig;
+﻿using Newtonsoft.Json;
+using PCLAppConfig;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace XamarinMarvelChallenge.MarvelApi
 {
-    class MarvelApi
+    public class MarvelApi
     {
         public dynamic Characters { get; } // GetCharacters
         private readonly HttpClient _client = new HttpClient();
@@ -29,21 +30,32 @@ namespace XamarinMarvelChallenge.MarvelApi
 
         public async Task<dynamic> GetCharacters()
         {
-            var timestamp = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds.ToString();
-            var hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
-            var hash = CreateHash(hashString);
-            var requestURL = string.Format("{0}/characters?ts={0}&apiKey={1}&hash={2}", _apiBaseEndpoint, timestamp, hash);
-            var url = new Uri(requestURL);
-            var response = await _client.GetAsync(url);
-
-            string json;
-
-            using (var content = response.Content)
+            try
             {
-                json = await content.ReadAsStringAsync();
-            }
+                var timestamp = (DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds.ToString();
+                var hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
+                var hash = CreateHash(hashString);
+                var requestURL = string.Format("{0}/characters?ts={1}&apiKey={2}&hash={3}", _apiBaseEndpoint, timestamp, _privateKey, hash);
+                var url = new Uri(requestURL);
+                var response = await _client.GetAsync(url);
 
-            return json;
+                string json;
+
+                using (var content = response.Content)
+                {
+                    json = await content.ReadAsStringAsync();
+                }
+
+                dynamic characters = JsonConvert.DeserializeObject<dynamic>(json);
+
+                return characters;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.StackTrace);
+                return null;
+            }
+            
         }
 
         private string CreateHash(string hashString)
