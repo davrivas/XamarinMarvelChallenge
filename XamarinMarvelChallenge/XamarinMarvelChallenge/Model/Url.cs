@@ -6,5 +6,7 @@ namespace XamarinMarvelChallenge.Model
 {
     class Url
     {
+        public string type { get; set; }
+        public string url { get; set; }
     }
 }
