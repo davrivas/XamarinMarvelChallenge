@@ -11,7 +11,7 @@ namespace XamarinMarvelChallenge.MarvelApi
     public class MarvelApi
     {
         private readonly HttpClient _client;
-        private const string _apiBaseEndpoint = "https://gateway.marvel.com/v1/public/";
+        private const string _apiBaseEndpoint = "https://gateway.marvel.com:443/v1/public";
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
 
@@ -31,10 +31,10 @@ namespace XamarinMarvelChallenge.MarvelApi
         {
             try
             {
-                var timestamp = ((DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
-                var hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
-                var hash = CreateHash(hashString);
-                var requestURL = string.Format("{0}characters?ts={1}&apiKey={2}&hash={3}", _apiBaseEndpoint, timestamp, _publicKey, hash);
+                string timestamp = ((long)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString();
+                string hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
+                string hash = CreateHash(hashString);
+                string requestURL = $"{_apiBaseEndpoint}/characters?ts={timestamp}&apiKey={_publicKey}&hash={hash}";
                 var url = new Uri(requestURL);
                 var response = await _client.GetAsync(url);
 
@@ -45,9 +45,16 @@ namespace XamarinMarvelChallenge.MarvelApi
                     json = await content.ReadAsStringAsync();
                 }
 
-                dynamic characters = JsonConvert.DeserializeObject<dynamic>(json);
+                if (response.IsSuccessStatusCode)
+                {
+                    dynamic characters = JsonConvert.DeserializeObject<dynamic>(json);
 
-                return characters;
+                    return characters;
+                }
+                else
+                {
+                    throw new Exception(json);
+                }
             }
             catch (Exception ex)
             {
@@ -57,40 +64,40 @@ namespace XamarinMarvelChallenge.MarvelApi
             
         }
 
-        private string CreateHash(string hashString)
+        private string CreateHash(string input)
         {
-            var hash = string.Empty;
+            //string hash = string.Empty;
 
-            using (MD5 md5Hash = MD5.Create())
-            {
-                var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(hashString));
-                var stringBuilder = new StringBuilder();
-
-                for (var i = 0; i < data.Length; i++)
-                {
-                    stringBuilder.Append(data[i].ToString("x2"));
-                }
-
-                hash = stringBuilder.ToString();
-            }
-
-            return hash;
-
-
-
-            //using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            //using (MD5 md5Hash = MD5.Create())
             //{
-            //    byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(hashString);
-            //    byte[] hashBytes = md5.ComputeHash(inputBytes);
+            //    byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(hashString));
+            //    var stringBuilder = new StringBuilder();
 
-            //    // Convert the byte array to hexadecimal string
-            //    StringBuilder sb = new StringBuilder();
-            //    for (int i = 0; i < hashBytes.Length; i++)
+            //    for (var i = 0; i < data.Length; i++)
             //    {
-            //        sb.Append(hashBytes[i].ToString("X2"));
+            //        stringBuilder.Append(data[i].ToString("x2"));
             //    }
-            //    return sb.ToString();
+
+            //    hash = stringBuilder.ToString();
             //}
+
+            //return hash;
+
+
+
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString().ToLower();
+            }
         }
     }
 }

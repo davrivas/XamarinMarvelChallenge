@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.MarvelApi;
 
@@ -18,8 +19,10 @@ namespace Tests.MarvelApiTests
         public async Task GetCharacters_WhenCalled_ReturnAnything()
         {
             dynamic characters = await _marvelApi.GetCharacters();
-            System.Console.WriteLine(characters);
-            //Assert.Pass();
+            Console.WriteLine(characters);
+
+            Assert.Pass();
+            Assert.Fail();
         }
     }
 }
