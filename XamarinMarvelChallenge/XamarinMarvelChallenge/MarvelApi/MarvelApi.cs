@@ -49,7 +49,7 @@ namespace XamarinMarvelChallenge.MarvelApi
                 if (response.IsSuccessStatusCode)
                 {
                     var successfulResponse = JsonConvert.DeserializeObject<SuccessfulResponse>(json);
-                    var data = successfulResponse.data;
+                    var data = successfulResponse.Data;
                     characters = data.Characters;
                 }
                 else

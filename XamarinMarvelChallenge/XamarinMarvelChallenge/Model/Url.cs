@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace XamarinMarvelChallenge.Model
 {
     public class Url
     {
-        public string type { get; set; }
-        public string url { get; set; }
+        [JsonProperty(PropertyName = "type")]
+        public string Type { get; set; }
+        [JsonProperty(PropertyName = "url")]
+        public string UrlValue { get; set; }
     }
 }

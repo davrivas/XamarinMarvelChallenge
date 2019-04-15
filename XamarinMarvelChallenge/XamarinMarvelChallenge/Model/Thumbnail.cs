@@ -1,9 +1,14 @@
-﻿namespace XamarinMarvelChallenge.Model
+﻿using Newtonsoft.Json;
+
+namespace XamarinMarvelChallenge.Model
 {
     public class Thumbnail
     {
-        public string path { get; set; }
-        public string extension { get; set; }
-        public string PathAndExtension => path + "." + extension;
+        [JsonProperty(PropertyName = "path")]
+        public string Path { get; set; }
+        [JsonProperty(PropertyName = "extension")]
+        public string Extension { get; set; }
+        [JsonIgnore]
+        public string PathAndExtension => Path + "." + Extension;
     }
 }

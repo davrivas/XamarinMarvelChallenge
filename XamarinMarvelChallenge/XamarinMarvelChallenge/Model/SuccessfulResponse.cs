@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace XamarinMarvelChallenge.Model
 {
     public class SuccessfulResponse
     {
-        public int code { get; set; }
-        public string status { get; set; }
-        public string copyright { get; set; }
-        public string attributionText { get; set; }
-        public string attributionHTML { get; set; }
-        public string etag { get; set; }
-        public Data data { get; set; }
+        [JsonProperty(PropertyName = "code")]
+        public int Code { get; set; }
+        [JsonProperty(PropertyName = "status")]
+        public string Status { get; set; }
+        [JsonProperty(PropertyName = "copyright")]
+        public string Copyright { get; set; }
+        [JsonProperty(PropertyName = "attributionText")]
+        public string AttributionText { get; set; }
+        [JsonProperty(PropertyName = "attributionHTML")]
+        public string AttributionHTML { get; set; }
+        [JsonProperty(PropertyName = "etag")]
+        public string Etag { get; set; }
+        [JsonProperty(PropertyName = "data")]
+        public Data Data { get; set; }
     }
 }

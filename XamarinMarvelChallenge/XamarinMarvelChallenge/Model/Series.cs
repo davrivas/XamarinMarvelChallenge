@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace XamarinMarvelChallenge.Model
 {
     public class Series
     {
-        public int available { get; set; }
-        public string collectionURI { get; set; }
-        public List<object> items { get; set; }
-        public int returned { get; set; }
+        [JsonProperty(PropertyName = "available")]
+        public int Available { get; set; }
+        [JsonProperty(PropertyName = "collectionURI")]
+        public string CollectionURI { get; set; }
+        [JsonProperty(PropertyName = "items")]
+        public List<object> Items { get; set; }
+        [JsonProperty(PropertyName = "returned")]
+        public int Returned { get; set; }
     }
 }

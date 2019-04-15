@@ -5,10 +5,14 @@ namespace XamarinMarvelChallenge.Model
 {
     public class Data
     {
-        public int offset { get; set; }
-        public int limit { get; set; }
-        public int total { get; set; }
-        public int count { get; set; }
+        [JsonProperty(PropertyName = "offset")]
+        public int Offset { get; set; }
+        [JsonProperty(PropertyName = "limit")]
+        public int Limit { get; set; }
+        [JsonProperty(PropertyName = "total")]
+        public int Total { get; set; }
+        [JsonProperty(PropertyName = "count")]
+        public int Count { get; set; }
         [JsonProperty(PropertyName = "results")]
         public List<Character> Characters { get; set; }
     }

@@ -13,13 +13,21 @@ namespace XamarinMarvelChallenge.Model
         public string Name { get; set; }
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
-        public DateTime modified { get; set; }
-        public Thumbnail thumbnail { get; set; }
-        public string resourceURI { get; set; }
-        public Comics comics { get; set; }
-        public Series series { get; set; }
-        public Stories stories { get; set; }
-        public Events events { get; set; }
-        public List<Url> urls { get; set; }
+        [JsonProperty(PropertyName = "modified")]
+        public DateTime Modified { get; set; }
+        [JsonProperty(PropertyName = "thumbnail")]
+        public Thumbnail Thumbnail { get; set; }
+        [JsonProperty(PropertyName = "resourceURI")]
+        public string ResourceURI { get; set; }
+        [JsonProperty(PropertyName = "comics")]
+        public Comics Comics { get; set; }
+        [JsonProperty(PropertyName = "series")]
+        public Series Series { get; set; }
+        [JsonProperty(PropertyName = "stories")]
+        public Stories Stories { get; set; }
+        [JsonProperty(PropertyName = "events")]
+        public Events Events { get; set; }
+        [JsonProperty(PropertyName = "urls")]
+        public List<Url> Urls { get; set; }
     }
 }
