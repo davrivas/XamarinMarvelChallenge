@@ -72,25 +72,6 @@ namespace XamarinMarvelChallenge.MarvelApi
 
         private string CreateHash(string input)
         {
-            //string hash = string.Empty;
-
-            //using (MD5 md5Hash = MD5.Create())
-            //{
-            //    byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(hashString));
-            //    var stringBuilder = new StringBuilder();
-
-            //    for (var i = 0; i < data.Length; i++)
-            //    {
-            //        stringBuilder.Append(data[i].ToString("x2"));
-            //    }
-
-            //    hash = stringBuilder.ToString();
-            //}
-
-            //return hash;
-
-
-
             using (MD5 md5 = MD5.Create())
             {
                 byte[] inputBytes = Encoding.ASCII.GetBytes(input);
