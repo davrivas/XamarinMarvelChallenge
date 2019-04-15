@@ -11,11 +11,11 @@ namespace XamarinMarvelChallenge.MarvelApi
     public class MarvelApi
     {
         private readonly HttpClient _client;
-        private const string _apiBaseEndpoint = "https://gateway.marvel.com:443/v1/public";
+        private const string _apiBaseEndpoint = "http://gateway.marvel.com/v1/public";
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
 
-        public string Attribution => $"Data provided by Marvel. © {DateTime.Now.Year} Marvel";
+        public string Attribution => "Data provided by Marvel. © 2014 Marvel";
 
         // example call
         // ts = timestamp
@@ -25,16 +25,17 @@ namespace XamarinMarvelChallenge.MarvelApi
         public MarvelApi()
         {
             _client = new HttpClient();
+            _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
         public async Task<dynamic> GetCharacters()
         {
             try
             {
-                string timestamp = ((long)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString();
-                string hashString = string.Format("{0}{1}{2}", timestamp, _privateKey, _publicKey);
+                string ts = ((long)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString();
+                string hashString = string.Format("{0}{1}{2}", ts, _privateKey, _publicKey);
                 string hash = CreateHash(hashString);
-                string requestURL = $"{_apiBaseEndpoint}/characters?ts={timestamp}&apiKey={_publicKey}&hash={hash}";
+                string requestURL = $"{_apiBaseEndpoint}/characters?apikey={_publicKey}&ts={ts}&hash={hash}";
                 var url = new Uri(requestURL);
                 var response = await _client.GetAsync(url);
 
