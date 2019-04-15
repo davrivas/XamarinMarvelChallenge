@@ -18,11 +18,12 @@ namespace Tests.MarvelApiTests
         [Test]
         public async Task GetCharacters_WhenCalled_ReturnAnything()
         {
-            dynamic characters = await _marvelApi.GetCharacters();
-            Console.WriteLine(characters);
+            var characters = await _marvelApi.GetCharacters();
 
-            Assert.Pass();
-            Assert.Fail();
+            if (characters != null)
+                Assert.Pass();
+            else
+                Assert.Fail();
         }
     }
 }

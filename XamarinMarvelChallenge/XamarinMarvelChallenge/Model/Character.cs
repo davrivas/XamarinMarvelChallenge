@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +7,12 @@ namespace XamarinMarvelChallenge.Model
 {
     public class Character
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public int Id { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
         public DateTime modified { get; set; }
         public Thumbnail thumbnail { get; set; }
         public string resourceURI { get; set; }
