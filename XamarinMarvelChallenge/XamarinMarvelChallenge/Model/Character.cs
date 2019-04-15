@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace XamarinMarvelChallenge.Model
@@ -28,6 +29,6 @@ namespace XamarinMarvelChallenge.Model
         [JsonProperty(PropertyName = "events")]
         public Events Events { get; set; }
         [JsonProperty(PropertyName = "urls")]
-        public List<Url> Urls { get; set; }
+        public ObservableCollection<Url> Urls { get; set; }
     }
 }

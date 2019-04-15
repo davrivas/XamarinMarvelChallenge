@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace XamarinMarvelChallenge.Model
 {
@@ -14,6 +15,6 @@ namespace XamarinMarvelChallenge.Model
         [JsonProperty(PropertyName = "count")]
         public int Count { get; set; }
         [JsonProperty(PropertyName = "results")]
-        public List<Character> Characters { get; set; }
+        public ObservableCollection<Character> Characters { get; set; }
     }
 }
