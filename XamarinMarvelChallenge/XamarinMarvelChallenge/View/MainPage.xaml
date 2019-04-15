@@ -6,33 +6,34 @@
         <ScrollView>
             <StackLayout>
                 <StackLayout Orientation="Horizontal">
-                    <!--marvel image-->
-                    <Image Source=""/>
-                    <Entry Placeholder="Search" HorizontalOptions="FillAndExpand"/>
+                    <Image Source="https://upload.wikimedia.org/wikipedia/commons/0/04/MarvelLogo.svg" HeightRequest="25"/>
+                    <Entry Placeholder="Search" HorizontalOptions="StartAndExpand"/>
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal">
-                    <!--characters-->
-                    <Image Source=""/>
+                    <Image Source="characters.png"/>
                     <Label Text="Characters" HorizontalOptions="StartAndExpand" />
                     <!--sort by-->
                     <Picker />
                 </StackLayout>
 
-                <!--este sera el listview-->
-                <StackLayout>
-                    <StackLayout Orientation="Horizontal">
-                        <!--hero image-->
-                        <Image Source=""/>
-                        <StackLayout>
-                            <Label Text="Hero name" FontAttributes="Bold"/>
-                            <Label Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus turpis ut erat auctor, a."/>
-                            <Button Text="View more" BackgroundColor="Red" TextColor="White" HorizontalOptions="Start"/>
-                        </StackLayout>
-                        <!--related comics-->
-                    </StackLayout>
-                </StackLayout>
-                <!--fin listview-->
+                <ListView ItemsSource="{Binding Characters}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Image Source="{Binding Thumbnail.PathAndExtension}"/>
+                                    <StackLayout>
+                                        <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Description}"/>
+                                        <Button Text="View more" BackgroundColor="Red" TextColor="White" HorizontalOptions="Start"/>
+                                    </StackLayout>
+                                    <!--related comics-->
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
