@@ -13,7 +13,7 @@
             <StackLayout Orientation="Horizontal">
                 <Label Text="Detail"/>
                 <Label Text="Wiki"/>
-                <Label Text="Comic link"
+                <Label Text="Comic link"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
