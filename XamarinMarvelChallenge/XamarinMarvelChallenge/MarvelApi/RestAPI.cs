@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -10,7 +10,7 @@ using XamarinMarvelChallenge.Model;
 
 namespace XamarinMarvelChallenge.MarvelApi
 {
-    public class MarvelApi
+    public class RestApi
     {
         private readonly HttpClient _client;
         private const string _apiBaseEndpoint = "http://gateway.marvel.com/v1/public";
@@ -19,15 +19,15 @@ namespace XamarinMarvelChallenge.MarvelApi
 
         public static string Attribution => "Data provided by Marvel. © 2014 Marvel";
 
-        public MarvelApi()
+        public RestApi()
         {
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
-        public async Task<List<Character>> GetCharacters()
+        public async Task<ObservableCollection<Character>> GetCharacters()
         {
-            List<Character> characters;
+            ObservableCollection<Character> characters;
 
             string ts = ((long)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString();
             string hashString = string.Format("{0}{1}{2}", ts, _privateKey, _publicKey);
@@ -36,7 +36,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             var url = new Uri(requestURL);
 
             try
-            {                
+            {
                 var response = await _client.GetAsync(url);
 
                 string json;

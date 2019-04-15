@@ -1,18 +1,17 @@
 using NUnit.Framework;
-using System;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.MarvelApi;
 
 namespace Tests.MarvelApiTests
 {
-    public class Tests
+    public class RestAPITests
     {
-        private MarvelApi _marvelApi;
+        private RestApi _marvelApi;
 
         [SetUp]
         public void Setup()
         {
-            _marvelApi = new MarvelApi();
+            _marvelApi = new RestApi();
         }
 
         [Test]
