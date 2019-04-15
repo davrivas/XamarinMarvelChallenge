@@ -4,7 +4,7 @@ using System.Text;
 
 namespace XamarinMarvelChallenge.Model
 {
-    class Character
+    public class Character
     {
         public int id { get; set; }
         public string name { get; set; }

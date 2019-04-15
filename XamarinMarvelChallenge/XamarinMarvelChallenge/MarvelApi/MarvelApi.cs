@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using XamarinMarvelChallenge.Model;
 
 namespace XamarinMarvelChallenge.MarvelApi
 {
@@ -28,7 +30,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
-        public async Task<dynamic> GetCharacters()
+        public async Task<List<Character>> GetCharacters()
         {
             try
             {
@@ -48,13 +50,16 @@ namespace XamarinMarvelChallenge.MarvelApi
 
                 if (response.IsSuccessStatusCode)
                 {
-                    dynamic characters = JsonConvert.DeserializeObject<dynamic>(json);
+                    var apiResponse = JsonConvert.DeserializeObject<MarvelCharacterResponse>(json);
+                    var data = apiResponse.data;
+                    var characters = data.Characters;                    
 
                     return characters;
                 }
                 else
                 {
-                    throw new Exception(json);
+                    Debug.WriteLine(json);
+                    return null;
                 }
             }
             catch (Exception ex)

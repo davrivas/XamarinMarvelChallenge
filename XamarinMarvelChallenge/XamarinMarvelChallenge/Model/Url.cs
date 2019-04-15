@@ -4,7 +4,7 @@ using System.Text;
 
 namespace XamarinMarvelChallenge.Model
 {
-    class Url
+    public class Url
     {
         public string type { get; set; }
         public string url { get; set; }
