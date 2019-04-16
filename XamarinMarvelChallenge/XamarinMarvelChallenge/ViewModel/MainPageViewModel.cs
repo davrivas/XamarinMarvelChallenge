@@ -9,7 +9,6 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public MainPageViewModel()
         {
-
         }
     }
 }

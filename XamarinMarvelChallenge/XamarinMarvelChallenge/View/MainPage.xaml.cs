@@ -1,5 +1,6 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.MarvelApi;
 using XamarinMarvelChallenge.ViewModel;
 
@@ -22,8 +23,12 @@ namespace XamarinMarvelChallenge.View
         {
             base.OnAppearing();
 
-            _viewModel.Characters = await _restAPI.GetCharacters();
+            if (GlobalVariables.Characters == null)
+            {
+                GlobalVariables.Characters = await _restAPI.GetCharacters();
+            }
 
+            _viewModel.Characters = GlobalVariables.Characters;
             BindingContext = _viewModel;
         }
     }

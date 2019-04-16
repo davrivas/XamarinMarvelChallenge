@@ -17,12 +17,12 @@
                     <Picker />
                 </StackLayout>
 
-                <ListView ItemsSource="{Binding Characters}">
+                <ListView x:Name="charactersListView" ItemsSource="{Binding Characters}" HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Orientation="Horizontal">
-                                    <Image Source="{Binding Thumbnail.PathAndExtension}"/>
+                                    <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="150" Margin="0,0,10,0"/>
                                     <StackLayout>
                                         <Label Text="{Binding Name}" FontAttributes="Bold"/>
                                         <Label Text="{Binding Description}"/>
