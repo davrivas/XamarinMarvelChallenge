@@ -6,8 +6,10 @@ namespace XamarinMarvelChallenge.Model
     {
         [JsonProperty(PropertyName = "path")]
         public string Path { get; set; }
+
         [JsonProperty(PropertyName = "extension")]
         public string Extension { get; set; }
+
         [JsonIgnore]
         public string PathAndExtension => Path + "." + Extension;
     }
