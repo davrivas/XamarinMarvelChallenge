@@ -17,12 +17,10 @@ namespace Tests.MarvelApiTests
         [Test]
         public async Task GetCharacters_WhenCalled_ReturnAnything()
         {
-            var characters = await _marvelApi.GetCharacters();
+            await _marvelApi.GetCharacters();
 
-            if (characters != null)
-                Assert.Pass();
-            else
-                Assert.Fail();
+            Assert.Pass();
+            Assert.Fail();
         }
     }
 }
