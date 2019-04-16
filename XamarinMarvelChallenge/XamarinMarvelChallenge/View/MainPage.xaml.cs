@@ -24,9 +24,7 @@ namespace XamarinMarvelChallenge.View
             base.OnAppearing();
 
             if (GlobalVariables.Characters == null)
-            {
                 GlobalVariables.Characters = await _restAPI.GetCharacters();
-            }
 
             _viewModel.Characters = GlobalVariables.Characters;
             BindingContext = _viewModel;
