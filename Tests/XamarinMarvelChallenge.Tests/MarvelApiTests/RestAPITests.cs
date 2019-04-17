@@ -4,7 +4,7 @@ using XamarinMarvelChallenge.MarvelApi;
 
 namespace Tests.MarvelApiTests
 {
-    public class RestAPITests
+    public class RestApiTests
     {
         private RestApi _marvelApi;
 
