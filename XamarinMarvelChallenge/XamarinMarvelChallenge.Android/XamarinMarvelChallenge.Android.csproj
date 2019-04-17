@@ -137,5 +137,8 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\shopping_cart_primary.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\marvel_logo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
