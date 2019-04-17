@@ -1,5 +1,7 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinMarvelChallenge.Globals;
+using XamarinMarvelChallenge.MarvelApi;
 using XamarinMarvelChallenge.View;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -11,6 +13,7 @@ namespace XamarinMarvelChallenge
         {
             InitializeComponent();
 
+            GlobalVariables.RestApi = new RestApi();
             MainPage = new NavigationPage(new MainPage());
         }
 

@@ -1,7 +1,7 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinMarvelChallenge.Globals;
-using XamarinMarvelChallenge.MarvelApi;
 using XamarinMarvelChallenge.ViewModel;
 
 namespace XamarinMarvelChallenge.View
@@ -10,13 +10,11 @@ namespace XamarinMarvelChallenge.View
     public partial class MainPage : ContentPage
     {
         private readonly MainPageViewModel _viewModel;
-        private readonly RestApi _restAPI;
 
         public MainPage()
         {
             InitializeComponent();
             _viewModel = new MainPageViewModel();
-            _restAPI = new RestApi();
         }
 
         protected override async void OnAppearing()
@@ -24,10 +22,15 @@ namespace XamarinMarvelChallenge.View
             base.OnAppearing();
 
             if (GlobalVariables.Characters == null)
-                GlobalVariables.Characters = await _restAPI.GetCharacters();
+                GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
 
-            _viewModel.Characters = GlobalVariables.Characters;
+            _viewModel.GetSearchResults(_viewModel.SearchText);
             BindingContext = _viewModel;
+        }
+
+        private void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _viewModel.SortByCommand.Execute(sortByPicker.SelectedItem);
         }
     }
 }

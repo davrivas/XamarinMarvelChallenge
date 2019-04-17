@@ -1,30 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XamarinMarvelChallenge.View.MainPage">
+             x:Class="XamarinMarvelChallenge.View.MainPage"
+             Title="{Binding Title}">
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Image Source="https://upload.wikimedia.org/wikipedia/commons/0/04/MarvelLogo.svg" HeightRequest="25"/>
-                    <Entry Placeholder="Search" HorizontalOptions="StartAndExpand"/>
+                <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
+                    <Image Source="{Binding MarvelLogo}" HeightRequest="25"/>
+                    <Entry Text="{Binding SearchText}" Placeholder="Search" HorizontalOptions="FillAndExpand" ReturnType="Search" BackgroundColor="Transparent" 
+                           PlaceholderColor="LightGray" TextColor="White" ReturnCommand="{Binding SearchCharacterCommand}" ReturnCommandParameter="{Binding SearchText}" />
                 </StackLayout>
 
-                <StackLayout Orientation="Horizontal">
-                    <Image Source="characters.png"/>
-                    <Label Text="Characters" HorizontalOptions="StartAndExpand" />
-                    <!--sort by-->
-                    <Picker />
+                <StackLayout Orientation="Horizontal" Padding="10">
+                    <Image Source="{Binding CharacterIcon}" VerticalOptions="Center"/>
+                    <Label Text="Characters" FontAttributes="Bold"  VerticalOptions="Center" FontSize="Large"/>
+                    <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}" SelectedIndexChanged="Picker_SelectedIndexChanged"
+                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                 </StackLayout>
 
-                <ListView x:Name="charactersListView" ItemsSource="{Binding Characters}" HasUnevenRows="True">
+                <ListView x:Name="charactersListView" ItemsSource="{Binding SearchResults}" HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="150" Margin="0,0,10,0"/>
+                                <StackLayout Orientation="Horizontal" Padding="10">
+                                    <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="100" Margin="0,0,10,0"/>
                                     <StackLayout>
-                                        <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
                                         <Label Text="{Binding Description}"/>
                                         <Button Text="View more" BackgroundColor="Red" TextColor="White" HorizontalOptions="Start"/>
                                     </StackLayout>

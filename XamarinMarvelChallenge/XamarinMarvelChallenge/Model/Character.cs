@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using MvvmHelpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 
 namespace XamarinMarvelChallenge.Model
 {
-    public class Character
+    public class Character : ObservableObject
     {
         [JsonProperty(PropertyName = "id")]
         public int Id { get; set; }
@@ -39,8 +40,14 @@ namespace XamarinMarvelChallenge.Model
         [JsonProperty(PropertyName = "urls")]
         public ObservableCollection<Url> Urls { get; set; }
 
+        private bool _isFavorite;
+
         [JsonIgnore]
-        public bool IsFavorite { get; set; }
+        public bool IsFavorite
+        {
+            get { return _isFavorite; }
+            set { SetProperty(ref _isFavorite, value); }
+        }
 
         public Character()
         {
