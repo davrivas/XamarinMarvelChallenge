@@ -2,10 +2,12 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.Extensions;
 using XamarinMarvelChallenge.Model.Characters;
+using XamarinMarvelChallenge.Model.Comic;
 using XamarinMarvelChallenge.Utils;
 
 namespace XamarinMarvelChallenge.MarvelApi
@@ -68,9 +70,9 @@ namespace XamarinMarvelChallenge.MarvelApi
             return characters;
         }
 
-        public async Task<dynamic> GetComic(string resourceURI)
+        public async Task<Comic> GetComic(string resourceURI)
         {
-            dynamic comic;
+            Comic comic;
 
             SetUpTsHashStringMD5Hash();
             string requestUrl = $"{resourceURI}?apikey={_publicKey}&ts={_ts}&hash={_md5Hash}";
@@ -89,8 +91,9 @@ namespace XamarinMarvelChallenge.MarvelApi
 
                 if (response.IsSuccessStatusCode)
                 {
-                    comic = JsonConvert.DeserializeObject<dynamic>(json);
-                    Console.WriteLine("");
+                    var successfulResponse = JsonConvert.DeserializeObject<ComicSuccessfulResponse>(json);
+                    var data = successfulResponse.Data;
+                    comic = data.Comics.FirstOrDefault();
                 }
                 else
                 {
