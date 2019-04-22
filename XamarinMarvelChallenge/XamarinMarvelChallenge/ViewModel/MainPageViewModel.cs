@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using Xamarin.Forms;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
@@ -30,16 +31,17 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public string[] SortByOptions { get; private set; }
 
-        private ObservableCollection<Character> _searchResults;
+        private ICollection<Character> _searchResults;
 
-        public ObservableCollection<Character> SearchResults
+        public ICollection<Character> SearchResults
         {
             get { return _searchResults; }
             set { SetProperty(ref _searchResults, value); }
         }
 
-        public Command<string> SearchCharacterCommand { get; private set; }
-        public Command<string> SortByCommand { get; private set; }
+        public ICommand SearchCharacterCommand { get; private set; }
+        public ICommand SortByCommand { get; private set; }
+        public ICommand SelectComicCommand { get; private set; }
 
         public MainPageViewModel()
         {
@@ -48,8 +50,14 @@ namespace XamarinMarvelChallenge.ViewModel
             CharacterIcon = "characters.png";
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
 
-            SearchCharacterCommand = new Command<string>(GetSearchResults);
+            SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
+            SelectComicCommand = new Command<object>(SelectComic);
+        }
+
+        private void SelectComic(object obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void SortBy(string sortByOption)
@@ -72,15 +80,15 @@ namespace XamarinMarvelChallenge.ViewModel
             SearchResults = orderedResults;
         }
 
-        public void GetSearchResults(string searchText)
+        public void GetSearchResults()
         {
-            if (string.IsNullOrWhiteSpace(searchText))
+            if (string.IsNullOrWhiteSpace(SearchText))
                 SearchResults = GlobalVariables.Characters;
             else
             {
                 var searchResultsIEnumerable = GlobalVariables.Characters
                     .Where(x => x.Name.ToLower()
-                    .Contains(searchText.ToLower()));
+                    .Contains(SearchText.ToLower()));
                 var newSearchResults = new ObservableCollection<Character>(searchResultsIEnumerable);
 
                 SearchResults = newSearchResults;

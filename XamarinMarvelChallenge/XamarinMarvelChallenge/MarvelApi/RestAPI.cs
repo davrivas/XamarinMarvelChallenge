@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using XamarinMarvelChallenge.Extensions;
 using XamarinMarvelChallenge.Model;
+using XamarinMarvelChallenge.Utils;
 
 namespace XamarinMarvelChallenge.MarvelApi
 {
@@ -17,7 +19,9 @@ namespace XamarinMarvelChallenge.MarvelApi
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
 
-        public static string Attribution => "Data provided by Marvel. © 2014 Marvel";
+        private string _ts;
+        private string _hashString;
+        private string _md5Hash;
 
         public RestApi()
         {
@@ -28,11 +32,8 @@ namespace XamarinMarvelChallenge.MarvelApi
         public async Task<ObservableCollection<Character>> GetCharacters()
         {
             ObservableCollection<Character> characters;
-
-            string ts = ((long)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalMilliseconds).ToString();
-            string hashString = string.Format("{0}{1}{2}", ts, _privateKey, _publicKey);
-            string hash = CreateHash(hashString);
-            string requestURL = $"{_apiBaseEndpoint}/characters?apikey={_publicKey}&ts={ts}&hash={hash}";
+            SetUpTsHashStringMD5Hash();
+            string requestURL = $"{_apiBaseEndpoint}/characters?apikey={_publicKey}&ts={_ts}&hash={_md5Hash}";
             var url = new Uri(requestURL);
 
             try
@@ -65,24 +66,52 @@ namespace XamarinMarvelChallenge.MarvelApi
             }
 
             return characters;
-
         }
 
-        private string CreateHash(string input)
+        public async Task<dynamic> GetComic(string resourceURI)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
+            dynamic comic;
 
-                // Convert the byte array to hexadecimal string
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
+            SetUpTsHashStringMD5Hash();
+            string requestUrl = $"{resourceURI}?apikey={_publicKey}&ts={_ts}&hash={_md5Hash}";
+            var url = new Uri(requestUrl);
+
+            try
+            {
+                var response = await _client.GetAsync(url);
+
+                string json;
+
+                using (var content = response.Content)
                 {
-                    sb.Append(hashBytes[i].ToString("X2"));
+                    json = await content.ReadAsStringAsync();
                 }
-                return sb.ToString().ToLower();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    comic = JsonConvert.DeserializeObject<dynamic>(json);
+                    Console.WriteLine("");
+                }
+                else
+                {
+                    Debug.WriteLine(json);
+                    comic = null;
+                }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.StackTrace);
+                comic = null;
+            }
+
+            return comic;
+        }
+
+        private void SetUpTsHashStringMD5Hash()
+        {
+            _ts = DateUtils.GetCurrentTimestampInMiliseconds();
+            _hashString = string.Format("{0}{1}{2}", _ts, _privateKey, _publicKey);
+            _md5Hash = _hashString.GetMD5Hash();
         }
     }
 }

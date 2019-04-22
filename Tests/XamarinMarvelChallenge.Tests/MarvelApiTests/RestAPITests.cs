@@ -22,5 +22,15 @@ namespace Tests.MarvelApiTests
             Assert.Pass();
             Assert.Fail();
         }
+
+        [Test]
+        public async Task GetComic_WhenCalled_ReturnAnything()
+        {
+            string resourceURI = "http://gateway.marvel.com/v1/public/comics/21366";
+            await _marvelApi.GetComic(resourceURI);
+
+            Assert.Pass();
+            Assert.Fail();
+        }
     }
 }

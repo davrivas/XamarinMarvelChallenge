@@ -24,13 +24,18 @@ namespace XamarinMarvelChallenge.View
             if (GlobalVariables.Characters == null)
                 GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
 
-            _viewModel.GetSearchResults(_viewModel.SearchText);
+            _viewModel.GetSearchResults();
             BindingContext = _viewModel;
         }
 
-        private void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        private void SortByPickOption(object sender, EventArgs e)
         {
             _viewModel.SortByCommand.Execute(sortByPicker.SelectedItem);
+        }
+
+        private void SelectComic(object sender, SelectedItemChangedEventArgs e)
+        {
+            _viewModel.SelectComicCommand.Execute(e.SelectedItem);
         }
     }
 }

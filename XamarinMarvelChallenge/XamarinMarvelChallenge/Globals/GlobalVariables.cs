@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using XamarinMarvelChallenge.MarvelApi;
 using XamarinMarvelChallenge.Model;
 
@@ -8,5 +9,7 @@ namespace XamarinMarvelChallenge.Globals
     {
         public static RestApi RestApi { get; set; }
         public static ObservableCollection<Character> Characters { get; set; }
+
+        public static string Attribution => $"Data provided by Marvel. © 2014-{DateTime.Now.Year} Marvel";
     }
 }

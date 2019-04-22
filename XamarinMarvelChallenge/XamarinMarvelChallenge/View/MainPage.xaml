@@ -8,14 +8,16 @@
             <StackLayout>
                 <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
                     <Image Source="{Binding MarvelLogo}" HeightRequest="25"/>
-                    <Entry Text="{Binding SearchText}" Placeholder="Search" HorizontalOptions="FillAndExpand" ReturnType="Search" BackgroundColor="Transparent" 
-                           PlaceholderColor="LightGray" TextColor="White" ReturnCommand="{Binding SearchCharacterCommand}" ReturnCommandParameter="{Binding SearchText}" />
+                    <Entry Text="{Binding SearchText}" Placeholder="Search" HorizontalOptions="FillAndExpand" ReturnType="Search" 
+                           BackgroundColor="Transparent" PlaceholderColor="LightGray" TextColor="White" 
+                           ReturnCommand="{Binding SearchCharacterCommand}" />
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal" Padding="10">
                     <Image Source="{Binding CharacterIcon}" VerticalOptions="Center"/>
                     <Label Text="Characters" FontAttributes="Bold"  VerticalOptions="Center" FontSize="Large"/>
-                    <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}" SelectedIndexChanged="Picker_SelectedIndexChanged"
+                    <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}" 
+                            SelectedIndexChanged="SortByPickOption"
                             HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                 </StackLayout>
 
@@ -23,14 +25,27 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal" Padding="10">
-                                    <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="100" Margin="0,0,10,0"/>
-                                    <StackLayout>
-                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
-                                        <Label Text="{Binding Description}"/>
-                                        <Button Text="View more" BackgroundColor="Red" TextColor="White" HorizontalOptions="Start"/>
+                                <StackLayout Padding="10">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="100" 
+                                               Margin="0,0,10,0" VerticalOptions="Start"/>
+
+                                        <StackLayout>
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
+                                            <Label Text="{Binding Description}"/>
+                                        </StackLayout>
                                     </StackLayout>
-                                    <!--related comics-->
+
+                                    <Label Text="Associated comics" FontAttributes="Bold" FontSize="Large"/>
+                                    <ListView ItemsSource="{Binding Comics.AssociatedComics}" ItemSelected="SelectComic">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <ViewCell>
+                                                    <Label Text="{Binding Name}"/>
+                                                </ViewCell>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
