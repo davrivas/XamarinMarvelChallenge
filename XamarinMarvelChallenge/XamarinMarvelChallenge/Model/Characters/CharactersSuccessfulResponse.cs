@@ -2,7 +2,7 @@
 
 namespace XamarinMarvelChallenge.Model.Characters
 {
-    public class SuccessfulResponse
+    public class CharactersSuccessfulResponse
     {
         [JsonProperty(PropertyName = "code")]
         public int Code { get; set; }
