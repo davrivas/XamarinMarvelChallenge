@@ -14,6 +14,25 @@ namespace XamarinMarvelChallenge.Model
         [JsonProperty(PropertyName = "items")]
         public ObservableCollection<ComicsItem> Items { get; set; }
 
+        [JsonIgnore]
+        public ObservableCollection<ComicsItem> AssociatedComics
+        {
+            get
+            {
+                var associatedComics = new ObservableCollection<ComicsItem>();
+
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    associatedComics.Add(Items[i]);
+
+                    if (i == 3) // if it is 4
+                        break;
+                }
+
+                return associatedComics;
+            }
+        }
+
         [JsonProperty(PropertyName = "returned")]
         public int Returned { get; set; }
     }
