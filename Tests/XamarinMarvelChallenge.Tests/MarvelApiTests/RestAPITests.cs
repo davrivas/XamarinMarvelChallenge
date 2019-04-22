@@ -15,22 +15,20 @@ namespace Tests.MarvelApiTests
         }
 
         [Test]
-        public async Task GetCharacters_WhenCalled_ReturnAnything()
+        public async Task GetCharacters_WhenCalled_ReturnNotNull()
         {
-            await _marvelApi.GetCharacters();
+            var characters = await _marvelApi.GetCharacters();
 
-            Assert.Pass();
-            Assert.Fail();
+            Assert.AreNotEqual(null, characters);
         }
 
         [Test]
-        public async Task GetComic_WhenCalled_ReturnAnything()
+        public async Task GetComic_WhenCalled_ReturnNotNull()
         {
             string resourceURI = "http://gateway.marvel.com/v1/public/comics/21366";
-            await _marvelApi.GetComic(resourceURI);
+            var comic = await _marvelApi.GetComic(resourceURI);
 
-            Assert.Pass();
-            Assert.Fail();
+            Assert.AreNotEqual(null, comic);
         }
     }
 }
