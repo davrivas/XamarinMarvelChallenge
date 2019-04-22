@@ -13,7 +13,6 @@ namespace XamarinMarvelChallenge.MarvelApi
     public class RestApi
     {
         private readonly HttpClient _client;
-        private const string _apiBaseEndpoint = "http://gateway.marvel.com/v1/public";
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
 
@@ -31,7 +30,10 @@ namespace XamarinMarvelChallenge.MarvelApi
         {
             ObservableCollection<Character> characters;
             SetUpTsHashStringMD5Hash();
-            string requestURL = $"{_apiBaseEndpoint}/characters?apikey={_publicKey}&ts={_ts}&hash={_md5Hash}";
+            string requestURL = "http://gateway.marvel.com/v1/public/characters"
+                + "?apikey=" + _publicKey
+                + "&ts=" + _ts 
+                + "&hash=" +_md5Hash;
             var url = new Uri(requestURL);
 
             try
