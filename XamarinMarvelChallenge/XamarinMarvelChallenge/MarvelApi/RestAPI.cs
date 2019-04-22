@@ -3,11 +3,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.Extensions;
-using XamarinMarvelChallenge.Model;
+using XamarinMarvelChallenge.Model.Characters;
 using XamarinMarvelChallenge.Utils;
 
 namespace XamarinMarvelChallenge.MarvelApi

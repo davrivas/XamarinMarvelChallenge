@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 using XamarinMarvelChallenge.Globals;
-using XamarinMarvelChallenge.Model;
+using XamarinMarvelChallenge.Model.Characters;
 
 namespace XamarinMarvelChallenge.ViewModel
 {

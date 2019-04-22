@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 
-namespace XamarinMarvelChallenge.Model
+namespace XamarinMarvelChallenge.Model.Characters
 {
-    public class Stories
+    public class Series
     {
         [JsonProperty(PropertyName = "available")]
         public int Available { get; set; }
@@ -12,7 +12,7 @@ namespace XamarinMarvelChallenge.Model
         public string CollectionURI { get; set; }
 
         [JsonProperty(PropertyName = "items")]
-        public ObservableCollection<StoriesItem> Items { get; set; }
+        public ObservableCollection<SeriesItem> Items { get; set; }
 
         [JsonProperty(PropertyName = "returned")]
         public int Returned { get; set; }

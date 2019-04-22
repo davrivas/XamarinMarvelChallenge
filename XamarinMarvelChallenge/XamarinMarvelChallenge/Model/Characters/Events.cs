@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 
-namespace XamarinMarvelChallenge.Model
+namespace XamarinMarvelChallenge.Model.Characters
 {
     public class Events
     {

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 
-namespace XamarinMarvelChallenge.Model
+namespace XamarinMarvelChallenge.Model.Characters
 {
     public class Character : ObservableObject
     {

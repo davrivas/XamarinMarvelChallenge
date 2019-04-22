@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace XamarinMarvelChallenge.Model
+namespace XamarinMarvelChallenge.Model.Characters
 {
     public class SeriesItem
     {

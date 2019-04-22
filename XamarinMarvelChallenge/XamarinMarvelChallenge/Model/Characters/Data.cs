@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace XamarinMarvelChallenge.Model
+namespace XamarinMarvelChallenge.Model.Characters
 {
     public class Data
     {
