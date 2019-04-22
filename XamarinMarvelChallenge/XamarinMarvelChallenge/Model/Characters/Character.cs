@@ -39,19 +39,5 @@ namespace XamarinMarvelChallenge.Model.Characters
 
         [JsonProperty(PropertyName = "urls")]
         public ObservableCollection<Url> Urls { get; set; }
-
-        private bool _isFavorite;
-
-        [JsonIgnore]
-        public bool IsFavorite
-        {
-            get { return _isFavorite; }
-            set { SetProperty(ref _isFavorite, value); }
-        }
-
-        public Character()
-        {
-            IsFavorite = false;
-        }
     }
 }
