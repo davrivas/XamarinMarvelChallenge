@@ -1,7 +1,9 @@
-﻿using Xamarin.Forms;
+﻿using System.Collections.ObjectModel;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.MarvelApi;
+using XamarinMarvelChallenge.Model.Comic;
 using XamarinMarvelChallenge.View;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -14,7 +16,8 @@ namespace XamarinMarvelChallenge
             InitializeComponent();
 
             GlobalVariables.RestApi = new RestApi();
-            MainPage = new NavigationPage(new MainPage());
+            GlobalVariables.FavoriteComics = new ObservableCollection<Comic>();
+            MainPage = new NavigationPage(new MainMasterDetailPage());
         }
 
         protected override void OnStart()

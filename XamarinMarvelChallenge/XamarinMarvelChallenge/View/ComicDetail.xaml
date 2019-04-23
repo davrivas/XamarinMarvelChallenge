@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinMarvelChallenge.View.ComicDetail"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20">
+                <Image Source="{Binding SelectedComic.Thumbnail.PathAndExtension}" HeightRequest="250"/>
+
+                <Label Text="{Binding SelectedComic.Title}" FontAttributes="Bold" FontSize="Large"/>
+                <Label Text="{Binding SelectedComic.Description}" VerticalOptions="StartAndExpand"/>
+
+                <StackLayout BackgroundColor="{Binding FavoriteBackgroundColor}" Padding="10" HorizontalOptions="FillAndExpand">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FavoriteCommand}"/>
+                    </StackLayout.GestureRecognizers>
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Image Source="{Binding FavoriteIcon}"/>
+                        <Label Text="{Binding FavoriteTitle}" TextColor="{Binding FavoriteTitleColor}" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

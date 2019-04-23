@@ -3,21 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model.Characters;
+using XamarinMarvelChallenge.View;
 
 namespace XamarinMarvelChallenge.ViewModel
 {
     public class MainPageViewModel : BaseViewModel
     {
-        /// <summary>
-        /// Taken from Wikipedia
-        /// </summary>
-        public string MarvelLogo { get; private set; }
-        public string CharacterIcon { get; private set; }
-
         private const string _nameSortByOption = "Name";
         private const string _dateSortByOption = "Date";
 
@@ -45,19 +41,20 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public MainPageViewModel()
         {
-            Title = "Characters";
-            MarvelLogo = "marvel_logo.png";
-            CharacterIcon = "characters.png";
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
 
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
-            SelectComicCommand = new Command<object>(SelectComic);
+            SelectComicCommand = new Command<object>(async vm => await SelectComic(vm));
         }
 
-        private void SelectComic(object obj)
+        private async Task SelectComic(object obj)
         {
-            throw new NotImplementedException();
+            var selectedComicItem = obj as ComicsItem;
+            var viewModel = new ComicDetailViewModel(selectedComicItem);
+            var page = new ComicDetail(viewModel);
+
+            await GlobalVariables.CurrentPage.Navigation.PushAsync(page);
         }
 
         private void SortBy(string sortByOption)

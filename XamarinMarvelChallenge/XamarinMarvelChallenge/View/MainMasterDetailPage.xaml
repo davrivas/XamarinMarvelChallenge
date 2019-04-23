@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinMarvelChallenge.View.MainMasterDetailPage">
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu">
+            <ContentPage.Content>
+                <StackLayout Padding="10">
+                    <Label Text="Xamarin Marvel Challenge" HorizontalTextAlignment="Center" 
+                           FontAttributes="Bold" FontSize="Large" Margin="0,0,0,10"/>
+
+                    <ListView ItemsSource="{Binding MenuItems}" HasUnevenRows="True" 
+                              ItemTapped="SelectMenuItem" VerticalOptions="StartAndExpand">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="5">
+                                        <Image Source="{Binding Icon}" Margin="0,0,5,0"/>
+                                        <Label Text="{Binding Name}" VerticalOptions="Center"/>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Label Text="{Binding Attribution}" HorizontalTextAlignment="Center"/>
+                </StackLayout>
+            </ContentPage.Content>
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>
