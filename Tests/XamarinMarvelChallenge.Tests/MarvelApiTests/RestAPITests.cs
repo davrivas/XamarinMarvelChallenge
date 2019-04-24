@@ -19,7 +19,7 @@ namespace Tests.MarvelApiTests
         {
             var characters = await _marvelApi.GetCharacters();
 
-            Assert.AreNotEqual(null, characters);
+            Assert.AreNotEqual(null, characters, "Characters must not be null", null);
             Assert.Pass();
         }
 
@@ -29,7 +29,7 @@ namespace Tests.MarvelApiTests
             string resourceURI = "http://gateway.marvel.com/v1/public/comics/21366";
             var comic = await _marvelApi.GetComic(resourceURI);
 
-            Assert.AreNotEqual(null, comic);
+            Assert.AreNotEqual(null, comic, "Comic must not be null", null);
             Assert.Pass();
         }
     }
