@@ -15,12 +15,17 @@ namespace XamarinMarvelChallenge.MarvelApi
     public class RestApi
     {
         private readonly HttpClient _client;
+
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
 
         private string _ts;
         private string _hashString;
         private string _md5Hash;
+        private string _requestUrl;
+
+        private string _jsonString;
+        private HttpResponseMessage _response;
 
         public RestApi()
         {
@@ -32,35 +37,16 @@ namespace XamarinMarvelChallenge.MarvelApi
         {
             ObservableCollection<Character> characters;
 
-            SetUpTsHashStringMD5Hash();
-            string requestURL = "http://gateway.marvel.com/v1/public/characters"
-                + "?apikey=" + _publicKey
-                + "&ts=" + _ts 
-                + "&hash=" +_md5Hash;
-            var url = new Uri(requestURL);
+            string baseUrl = "http://gateway.marvel.com/v1/public/characters";
+            Setup(baseUrl);
 
             try
             {
-                var response = await _client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                await MakeRequest();
 
-                string json;
-
-                using (var content = response.Content)
-                {
-                    json = await content.ReadAsStringAsync();
-                }
-                var successfulResponse = JsonConvert.DeserializeObject<CharactersSuccessfulResponse>(json);
+                var successfulResponse = JsonConvert.DeserializeObject<CharactersSuccessfulResponse>(_jsonString);
                 var data = successfulResponse.Data;
                 characters = data.Characters;
-
-                foreach (var character in characters)
-                {
-                    foreach (var comicItem in character.Comics.AssociatedComics)
-                    {
-                        comicItem.Comic = await GetComic(comicItem.ResourceURI);
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -75,23 +61,13 @@ namespace XamarinMarvelChallenge.MarvelApi
         {
             Comic comic;
 
-            SetUpTsHashStringMD5Hash();
-            string requestUrl = $"{resourceURI}?apikey={_publicKey}&ts={_ts}&hash={_md5Hash}";
-            var url = new Uri(requestUrl);
+            Setup(resourceURI);
 
             try
             {
-                var response = await _client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                await MakeRequest();
 
-                string json;
-
-                using (var content = response.Content)
-                {
-                    json = await content.ReadAsStringAsync();
-                }
-
-                var successfulResponse = JsonConvert.DeserializeObject<ComicSuccessfulResponse>(json);
+                var successfulResponse = JsonConvert.DeserializeObject<ComicSuccessfulResponse>(_jsonString);
                 var data = successfulResponse.Data;
                 comic = data.Comics.FirstOrDefault();
             }
@@ -104,11 +80,26 @@ namespace XamarinMarvelChallenge.MarvelApi
             return comic;
         }
 
-        private void SetUpTsHashStringMD5Hash()
+        private void Setup(string resourceURI)
         {
             _ts = DateUtils.GetCurrentTimestampInMiliseconds();
             _hashString = string.Format("{0}{1}{2}", _ts, _privateKey, _publicKey);
             _md5Hash = _hashString.GetMD5Hash();
+            _requestUrl = resourceURI
+                + "?apikey=" + _publicKey
+                + "&ts=" + _ts
+                + "&hash=" + _md5Hash;
+        }
+
+        private async Task MakeRequest()
+        {
+            _response = await _client.GetAsync(_requestUrl);
+            _response.EnsureSuccessStatusCode();
+
+            using (var content = _response.Content)
+            {
+                _jsonString = await content.ReadAsStringAsync();
+            }
         }
     }
 }

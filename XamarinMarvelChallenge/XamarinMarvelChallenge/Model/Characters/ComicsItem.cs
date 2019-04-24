@@ -9,8 +9,5 @@ namespace XamarinMarvelChallenge.Model.Characters
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-
-        [JsonIgnore]
-        public Comic.Comic Comic { get; set; }
     }
 }
