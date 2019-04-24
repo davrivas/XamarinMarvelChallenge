@@ -1,59 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XamarinMarvelChallenge.View.MainPage"
-             Title="Characters">
+             x:Class="XamarinMarvelChallenge.View.MainPage">
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout>
-                <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
-                    <Image Source="marvel_logo.png" HeightRequest="25"/>
-                    <Entry Text="{Binding SearchText}" Placeholder="Search" HorizontalOptions="FillAndExpand" ReturnType="Search" 
-                           BackgroundColor="Transparent" PlaceholderColor="LightGray" TextColor="White" 
-                           ReturnCommand="{Binding SearchCharacterCommand}" />
-                </StackLayout>
+        <StackLayout Padding="20">
+            <Label Text="Welcome to Xamarin Marvel Challenge" FontSize="Large" 
+                   FontAttributes="Bold" HorizontalTextAlignment="Center"/>
 
-                <StackLayout Orientation="Horizontal" Padding="10">
-                    <Image Source="characters.png" VerticalOptions="Center"/>
-                    <Label Text="Characters" FontAttributes="Bold"  VerticalOptions="Center" FontSize="Large"/>
-                    <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}" 
-                            SelectedIndexChanged="SortByPickOption"
-                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                </StackLayout>
+            <Label IsVisible="{Binding IsBusy}" Text="Please wait until the data is retrieved.." TextColor="Red" 
+                   HorizontalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
 
-                <ListView x:Name="charactersListView" ItemsSource="{Binding SearchResults}" HasUnevenRows="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Padding="10">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="100" 
-                                               Margin="0,0,10,0" VerticalOptions="Start"/>
-
-                                        <StackLayout>
-                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
-                                            <Label Text="{Binding Description}"/>
-                                        </StackLayout>
-                                    </StackLayout>
-
-                                    <Label Text="Associated comics" FontAttributes="Bold" FontSize="Large"/>
-                                    <ListView ItemsSource="{Binding Comics.AssociatedComics}" HasUnevenRows="True" ItemSelected="SelectComic">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <ViewCell>
-                                                    <StackLayout Padding="5">
-                                                        <Label Text="{Binding Name}"/>
-                                                    </StackLayout>
-                                                </ViewCell>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-        </ScrollView>
+            <Button IsVisible="{Binding IsNotBusy}" BackgroundColor="Red" TextColor="White" 
+                    Text="Proceed to the app" Command="{Binding ProceedCommand}"
+                    HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

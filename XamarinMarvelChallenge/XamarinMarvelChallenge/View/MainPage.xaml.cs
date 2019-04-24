@@ -1,5 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.ViewModel;
@@ -9,12 +8,14 @@ namespace XamarinMarvelChallenge.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : ContentPage
     {
-        private readonly MainPageViewModel _viewModel;
+        private MainPageViewModel _viewModel;
 
         public MainPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
             _viewModel = new MainPageViewModel();
+            BindingContext = _viewModel;
         }
 
         protected override async void OnAppearing()
@@ -22,20 +23,26 @@ namespace XamarinMarvelChallenge.View
             base.OnAppearing();
 
             if (GlobalVariables.Characters == null)
-                GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
+            {
+                if (_viewModel.IsBusy && !_viewModel.IsNotBusy)
+                {
+                    GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
+                    _viewModel.IsBusy = false;
+                    _viewModel.IsNotBusy = true;
+                }
+            }
 
-            _viewModel.GetSearchResults();
-            BindingContext = _viewModel;
+            MessagingCenter.Subscribe<MainPageViewModel>(_viewModel, _viewModel.ProceedMessage, async (sender) =>
+            {
+                await Navigation.PushAsync(new MainMasterDetailPage());
+            });
         }
 
-        private void SortByPickOption(object sender, EventArgs e)
+        protected override void OnDisappearing()
         {
-            _viewModel.SortByCommand.Execute(sortByPicker.SelectedItem);
-        }
+            base.OnDisappearing();
 
-        private void SelectComic(object sender, SelectedItemChangedEventArgs e)
-        {
-            _viewModel.SelectComicCommand.Execute(e.SelectedItem);
+            MessagingCenter.Unsubscribe<MainPageViewModel>(_viewModel, _viewModel.ProceedMessage);
         }
     }
 }

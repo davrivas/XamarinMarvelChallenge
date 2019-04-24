@@ -14,7 +14,7 @@ namespace XamarinMarvelChallenge.View
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-            Detail = new NavigationPage(((Page)Activator.CreateInstance(typeof(MainPage))));
+            Detail = new NavigationPage(((Page)Activator.CreateInstance(typeof(CharacterList))));
 
             _viewModel = new MainMasterDetailPageViewModel();
             BindingContext = _viewModel;
@@ -22,6 +22,9 @@ namespace XamarinMarvelChallenge.View
 
         private void SelectMenuItem(object sender, ItemTappedEventArgs e)
         {
+            if (e.Item == null)
+                return;
+
             _viewModel.SelectMenuItemCommand.Execute(e.Item);
             (sender as ListView).SelectedItem = null;
             IsPresented = false;

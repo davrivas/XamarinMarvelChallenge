@@ -17,7 +17,7 @@ namespace XamarinMarvelChallenge
 
             GlobalVariables.RestApi = new RestApi();
             GlobalVariables.FavoriteComics = new ObservableCollection<Comic>();
-            MainPage = new NavigationPage(new MainMasterDetailPage());
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()

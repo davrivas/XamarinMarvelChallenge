@@ -20,6 +20,7 @@ namespace Tests.MarvelApiTests
             var characters = await _marvelApi.GetCharacters();
 
             Assert.AreNotEqual(null, characters);
+            Assert.Pass();
         }
 
         [Test]
@@ -29,6 +30,7 @@ namespace Tests.MarvelApiTests
             var comic = await _marvelApi.GetComic(resourceURI);
 
             Assert.AreNotEqual(null, comic);
+            Assert.Pass();
         }
     }
 }

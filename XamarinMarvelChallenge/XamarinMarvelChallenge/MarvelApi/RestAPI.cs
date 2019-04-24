@@ -31,6 +31,7 @@ namespace XamarinMarvelChallenge.MarvelApi
         public async Task<ObservableCollection<Character>> GetCharacters()
         {
             ObservableCollection<Character> characters;
+
             SetUpTsHashStringMD5Hash();
             string requestURL = "http://gateway.marvel.com/v1/public/characters"
                 + "?apikey=" + _publicKey
@@ -41,6 +42,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             try
             {
                 var response = await _client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
 
                 string json;
 
@@ -48,17 +50,16 @@ namespace XamarinMarvelChallenge.MarvelApi
                 {
                     json = await content.ReadAsStringAsync();
                 }
+                var successfulResponse = JsonConvert.DeserializeObject<CharactersSuccessfulResponse>(json);
+                var data = successfulResponse.Data;
+                characters = data.Characters;
 
-                if (response.IsSuccessStatusCode)
+                foreach (var character in characters)
                 {
-                    var successfulResponse = JsonConvert.DeserializeObject<CharactersSuccessfulResponse>(json);
-                    var data = successfulResponse.Data;
-                    characters = data.Characters;
-                }
-                else
-                {
-                    Debug.WriteLine(json);
-                    characters = null;
+                    foreach (var comicItem in character.Comics.AssociatedComics)
+                    {
+                        comicItem.Comic = await GetComic(comicItem.ResourceURI);
+                    }
                 }
             }
             catch (Exception ex)
@@ -81,6 +82,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             try
             {
                 var response = await _client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
 
                 string json;
 
@@ -89,17 +91,9 @@ namespace XamarinMarvelChallenge.MarvelApi
                     json = await content.ReadAsStringAsync();
                 }
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var successfulResponse = JsonConvert.DeserializeObject<ComicSuccessfulResponse>(json);
-                    var data = successfulResponse.Data;
-                    comic = data.Comics.FirstOrDefault();
-                }
-                else
-                {
-                    Debug.WriteLine(json);
-                    comic = null;
-                }
+                var successfulResponse = JsonConvert.DeserializeObject<ComicSuccessfulResponse>(json);
+                var data = successfulResponse.Data;
+                comic = data.Comics.FirstOrDefault();
             }
             catch (Exception ex)
             {

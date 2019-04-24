@@ -21,7 +21,7 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             MenuItems = new ObservableCollection<AppMenuItem>
             {
-                new AppMenuItem("Characters", "characters.png", typeof(MainPage)),
+                new AppMenuItem("Characters", "characters.png", typeof(CharacterList)),
                 new AppMenuItem("Favorites", "btn_favourites_primary.png", typeof(Page)) // must be Favorites page
             };
             SelectMenuItemCommand = new Command<object>(SelectMenuItem);
@@ -31,7 +31,7 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             var selectedMenuItem = obj as AppMenuItem;
             var destination = selectedMenuItem.Destination;
-            GlobalVariables.CurrentMasterDetailPage.Detail = new NavigationPage(((Page)Activator.CreateInstance(destination)));
+            //GlobalVariables.CurrentMasterDetailPage.Detail = new NavigationPage(((Page)Activator.CreateInstance(destination)));
         }
     }
 }

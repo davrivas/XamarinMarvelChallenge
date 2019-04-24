@@ -1,16 +1,14 @@
 ﻿using MvvmHelpers;
-using System;
 using System.Windows.Input;
 using Xamarin.Forms;
 using XamarinMarvelChallenge.Globals;
-using XamarinMarvelChallenge.Model.Characters;
 using XamarinMarvelChallenge.Model.Comic;
 
 namespace XamarinMarvelChallenge.ViewModel
 {
     public class ComicDetailViewModel : BaseViewModel
     {
-        public ComicsItem SelectedComicItem { get; private set; }
+        public string ResourceURI { get; private set; }
 
         private Comic _selectedComic;
 
@@ -32,9 +30,9 @@ namespace XamarinMarvelChallenge.ViewModel
         public Color FavoriteTitleColor => IsFavorite ? Color.FromRgb(237, 29, 36) : Color.FromRgb(61, 51, 51);
         public Color FavoriteBackgroundColor => IsFavorite ? Color.FromRgb(50, 40, 39) : Color.FromRgb(240, 240, 240);
 
-        public ComicDetailViewModel(ComicsItem selectedComicItem)
+        public ComicDetailViewModel(string resourceURI)
         {
-            SelectedComicItem = selectedComicItem;
+            ResourceURI = resourceURI;
             FavoriteCommand = new Command(FavoriteMethod);
         }
 
