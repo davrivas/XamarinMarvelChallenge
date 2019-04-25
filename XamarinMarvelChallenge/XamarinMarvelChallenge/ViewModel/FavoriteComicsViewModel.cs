@@ -25,7 +25,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public FavoriteComicsViewModel()
         {
-            Title = "Favorite comics (" + GlobalVariables.FavoriteComics.Count + ")";
+            Title = GetTitle();
             SelectComicCommand = new Command<object>(async (vm) => await SelectComic(vm));
             RemoveFromFavoritesCommand = new Command<object>(RemoveFromFavorites);
         }
@@ -48,12 +48,22 @@ namespace XamarinMarvelChallenge.ViewModel
             UpdateProperties();
         }
 
-        public void UpdateProperties()
+        private void UpdateProperties()
         {
-            Title = "Favorite comics (" + GlobalVariables.FavoriteComics.Count + ")";
+            Title = GetTitle();
             OnPropertyChanged(nameof(FavoriteComics));
             OnPropertyChanged(nameof(HasComics));
             OnPropertyChanged(nameof(DoesNotHaveComics));
+        }
+
+        private string GetTitle()
+        {
+            string title = "Favorite comics";
+
+            if (GlobalVariables.FavoriteComics.Count > 0)
+                title += " (" + GlobalVariables.FavoriteComics.Count + ")";
+
+            return title;
         }
     }
 }
