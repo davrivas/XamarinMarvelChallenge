@@ -33,7 +33,7 @@ namespace XamarinMarvelChallenge.View
             MessagingCenter.Unsubscribe<CharacterDetailViewModel>(_viewModel, _viewModel.SelectComicMessageName);
         }
 
-        private void ComicsListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        private void SelectComic(object sender, ItemTappedEventArgs e)
         {
             if (e.Item == null)
                 return;

@@ -9,7 +9,7 @@
                     <Label Text="Xamarin Marvel Challenge" HorizontalTextAlignment="Center" 
                            FontAttributes="Bold" FontSize="Large" Margin="0,0,0,10"/>
 
-                    <ListView ItemsSource="{Binding MenuItems}" HasUnevenRows="True" 
+                    <ListView x:Name="menuItemsListView" ItemsSource="{Binding MenuItems}" HasUnevenRows="True" 
                               ItemTapped="SelectMenuItem" VerticalOptions="StartAndExpand">
                         <ListView.ItemTemplate>
                             <DataTemplate>

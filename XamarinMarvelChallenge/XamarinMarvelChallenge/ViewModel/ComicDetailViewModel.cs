@@ -22,9 +22,11 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public ICommand FavoriteCommand { get; private set; }
 
-        public string FavoriteTitle => SelectedComic.IsFavorite ? "ADDED TO FAVORITES" : "ADD TO FAVORITES";
-        public Color FavoriteTitleColor => SelectedComic.IsFavorite ? Color.FromRgb(237, 29, 36) : Color.FromRgb(61, 51, 51);
-        public Color FavoriteBackgroundColor => SelectedComic.IsFavorite ? Color.FromRgb(50, 40, 39) : Color.FromRgb(240, 240, 240);
+        public bool IsFavorite => GlobalVariables.FavoriteComics.Contains(SelectedComic);
+        public string FavoriteIcon => IsFavorite ? "btn_favourites_primary.png" : "btn_favourites_default.png";
+        public string FavoriteTitle => IsFavorite ? "ADDED TO FAVORITES" : "ADD TO FAVORITES";
+        public Color FavoriteTitleColor => IsFavorite ? Color.FromRgb(237, 29, 36) : Color.FromRgb(61, 51, 51);
+        public Color FavoriteBackgroundColor => IsFavorite ? Color.FromRgb(50, 40, 39) : Color.FromRgb(240, 240, 240);
 
         public ComicDetailViewModel(Comic selectedComic)
         {
@@ -34,7 +36,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
         private void FavoriteMethod()
         {
-            if (SelectedComic.IsFavorite)
+            if (IsFavorite)
                 GlobalVariables.FavoriteComics.Remove(SelectedComic);
             else
                 GlobalVariables.FavoriteComics.Add(SelectedComic);
@@ -44,6 +46,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
         private void UpdateProperties()
         {
+            OnPropertyChanged(nameof(FavoriteIcon));
             OnPropertyChanged(nameof(FavoriteTitle));
             OnPropertyChanged(nameof(FavoriteTitleColor));
             OnPropertyChanged(nameof(FavoriteBackgroundColor));

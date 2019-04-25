@@ -56,7 +56,6 @@ namespace XamarinMarvelChallenge.MarvelApi
                     string name = (string)result["name"];
                     string description = (string)result["description"];
                     DateTime modified = (DateTime)result["modified"];
-                    //DateTime modified = Convert.ToDateTime(modifiedString);
 
                     var thumnail = (JObject)result["thumbnail"];
                     string path = (string)thumnail["path"];

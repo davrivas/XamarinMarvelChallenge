@@ -21,7 +21,7 @@
                     </StackLayout.GestureRecognizers>
 
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                        <Image Source="{Binding SelectedComic.FavoriteIcon}"/>
+                        <Image Source="{Binding FavoriteIcon}"/>
                         <Label Text="{Binding FavoriteTitle}" TextColor="{Binding FavoriteTitleColor}" FontAttributes="Bold" VerticalOptions="Center"/>
                     </StackLayout>
                 </StackLayout>

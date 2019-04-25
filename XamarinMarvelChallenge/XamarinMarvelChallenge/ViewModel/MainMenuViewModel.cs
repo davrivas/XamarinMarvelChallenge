@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -11,6 +12,9 @@ namespace XamarinMarvelChallenge.ViewModel
     public class MainMenuViewModel
     {
         public string Attribution => GlobalVariables.Attribution;
+        public string SelectMenuItemMessageName => "SelectMenuItem";
+
+        public Type SelectedDestination { get; private set; }
 
         public ICollection<AppMenuItem> MenuItems { get; private set; }
 
@@ -21,7 +25,7 @@ namespace XamarinMarvelChallenge.ViewModel
             MenuItems = new ObservableCollection<AppMenuItem>
             {
                 new AppMenuItem("Characters", "characters.png", typeof(CharacterList)),
-                new AppMenuItem("Favorites", "btn_favourites_primary.png", typeof(Page)) // must be Favorites page
+                new AppMenuItem("Favorite comics", "btn_favourites_primary.png", typeof(FavoriteComics)) // must be Favorites page
             };
             SelectMenuItemCommand = new Command<object>(SelectMenuItem);
         }
@@ -29,8 +33,8 @@ namespace XamarinMarvelChallenge.ViewModel
         private void SelectMenuItem(object obj)
         {
             var selectedMenuItem = obj as AppMenuItem;
-            var destination = selectedMenuItem.Destination;
-            //GlobalVariables.CurrentMasterDetailPage.Detail = new NavigationPage(((Page)Activator.CreateInstance(destination)));
+            SelectedDestination = selectedMenuItem.Destination;
+            MessagingCenter.Send(this, SelectMenuItemMessageName);
         }
     }
 }

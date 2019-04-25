@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinMarvelChallenge.ViewModel;
@@ -20,14 +21,33 @@ namespace XamarinMarvelChallenge.View
             BindingContext = _viewModel;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            MessagingCenter.Subscribe<MainMenuViewModel>(_viewModel, 
+                _viewModel.SelectMenuItemMessageName,
+                HandleSelectMenuItem);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+        }
+
         private void SelectMenuItem(object sender, ItemTappedEventArgs e)
         {
             if (e.Item == null)
                 return;
 
             _viewModel.SelectMenuItemCommand.Execute(e.Item);
-            (sender as ListView).SelectedItem = null;
+            menuItemsListView.SelectedItem = null;
             IsPresented = false;
+        }
+
+        private void HandleSelectMenuItem(MainMenuViewModel viewModel)
+        {
+            Detail = new NavigationPage(((Page)Activator.CreateInstance(viewModel.SelectedDestination)));
         }
     }
 }
