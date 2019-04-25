@@ -18,14 +18,14 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Padding="5">
-                                <Label Text="{Binding Name}" HorizontalOptions="StartAndExpand"/>
+                                <Label Text="{Binding Name}"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
             <Label IsVisible="{Binding DoesNotHaveComics}" Text="This character does not have comics" 
-                   FontAttributes="Italic" VerticalOptions="StartAndExpand"/>
+                   FontAttributes="Italic"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
