@@ -52,7 +52,7 @@ namespace XamarinMarvelChallenge.ViewModel
         public CharacterListViewModel()
         {
             Title = "Characters";
-            SearchResults = GlobalVariables.Characters == null ? new ObservableCollection<Character>() : GlobalVariables.Characters;
+            SearchResults = GlobalVariables.Characters ?? new ObservableCollection<Character>();
             IsBusy = GlobalVariables.Characters == null;
             IsNotBusy = GlobalVariables.Characters != null;
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
