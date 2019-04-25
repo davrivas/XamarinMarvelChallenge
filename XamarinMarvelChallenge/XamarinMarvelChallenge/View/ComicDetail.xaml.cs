@@ -16,13 +16,5 @@ namespace XamarinMarvelChallenge.View
             _viewModel = viewModel;
             BindingContext = _viewModel;
         }
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-
-            string resourceURI = _viewModel.SelectedCharacterComic.ResourceURI;
-            _viewModel.SelectedComic = await GlobalVariables.RestApi.GetComicByCharacter(resourceURI);
-        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinMarvelChallenge.ViewModel;
@@ -25,7 +24,7 @@ namespace XamarinMarvelChallenge.View
         {
             base.OnAppearing();
 
-            MessagingCenter.Subscribe<MainMenuViewModel>(_viewModel, 
+            MessagingCenter.Subscribe<MainMenuViewModel>(_viewModel,
                 _viewModel.SelectMenuItemMessageName,
                 HandleSelectMenuItem);
         }
@@ -33,6 +32,8 @@ namespace XamarinMarvelChallenge.View
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+
+            MessagingCenter.Unsubscribe<MainMenuViewModel>(_viewModel, _viewModel.SelectMenuItemMessageName);
         }
 
         private void SelectMenuItem(object sender, ItemTappedEventArgs e)
@@ -47,7 +48,7 @@ namespace XamarinMarvelChallenge.View
 
         private void HandleSelectMenuItem(MainMenuViewModel viewModel)
         {
-            Detail = new NavigationPage(((Page)Activator.CreateInstance(viewModel.SelectedDestination)));
+            Detail = new NavigationPage((Page)Activator.CreateInstance(viewModel.SelectedDestination));
         }
     }
 }
