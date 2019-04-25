@@ -33,7 +33,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             ObservableCollection<Character> characters;
 
             string baseUrl = "http://gateway.marvel.com/v1/public/characters";
-            Setup(baseUrl);
+            SetupRequestUrl(baseUrl);
 
             HttpResponseMessage response;
 
@@ -68,22 +68,9 @@ namespace XamarinMarvelChallenge.MarvelApi
                     string fullPath = path + "." + extension;
 
                     var comics = (JObject)result["comics"];
-                    var items = (JArray)comics["items"];
+                    string collectionURI = (string)comics["collectionURI"];
 
-                    var comicsCollection = new ObservableCollection<Comic>();
-
-                    foreach (var item in items)
-                    {
-                        string resourceURI = (string)item["resourceURI"];
-                        string comicName = (string)item["name"];
-
-                        var comicItem = new Comic
-                        {
-                            Title = comicName,
-                            ResourceURI = resourceURI
-                        };
-                        comicsCollection.Add(comicItem);
-                    }
+                    var comicsCollection = await GetComicsByCharacter(collectionURI);
 
                     var character = new Character
                     {
@@ -105,11 +92,11 @@ namespace XamarinMarvelChallenge.MarvelApi
             return characters;
         }
 
-        public async Task<Comic> GetComic(string resourceURI)
+        public async Task<ObservableCollection<Comic>> GetComicsByCharacter(string resourceURI)
         {
-            Comic comic;
+            ObservableCollection<Comic> comics;
 
-            Setup(resourceURI);
+            SetupRequestUrl(resourceURI);
 
             HttpResponseMessage response;
 
@@ -129,34 +116,43 @@ namespace XamarinMarvelChallenge.MarvelApi
                 var data = (JObject)successfulResponse["data"];
                 var results = (JArray)data["results"];
 
-                var firstComic = results[0];
-                string title = (string)firstComic["title"];
-                string description = (string)firstComic["description"];
+                comics = new ObservableCollection<Comic>();
 
-                var thumbnail = (JObject)firstComic["thumbnail"];
-                string path = (string)thumbnail["path"];
-                string extension = (string)thumbnail["extension"];
-                string fullPath = path + "." + extension;
-
-                comic = new Comic
+                for (int i = 0; i < results.Count; i++)
                 {
-                    Title = title,
-                    Description = description,
-                    Thumbnail = fullPath
-                };
+                    var result = results[i];
+                    string title = (string)result["title"];
+                    string description = (string)result["description"];
+
+                    var thumbnail = (JObject)result["thumbnail"];
+                    string path = (string)thumbnail["path"];
+                    string extension = (string)thumbnail["extension"];
+                    string fullPath = path + "." + extension;
+
+                    var comic = new Comic
+                    {
+                        Title = title,
+                        Description = description,
+                        Thumbnail = fullPath
+                    };
+                    comics.Add(comic);
+
+                    if (i == 3) // if it is 4
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.StackTrace);
-                comic = null;
+                comics = null;
             }
 
-            return comic;
+            return comics;
         }
 
-        private void Setup(string resourceURI)
+        private void SetupRequestUrl(string resourceURI)
         {
-            _ts = DateUtils.GetCurrentTimestampInMiliseconds();
+            _ts = DateTime.Now.GetCurrentTimestampInMiliseconds();
             _hashString = string.Format("{0}{1}{2}", _ts, _privateKey, _publicKey);
             _md5Hash = _hashString.GetMD5Hash();
             _requestUrl = resourceURI

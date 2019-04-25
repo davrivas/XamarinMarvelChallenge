@@ -8,8 +8,6 @@ namespace XamarinMarvelChallenge.ViewModel
 {
     public class ComicDetailViewModel : BaseViewModel
     {
-        public Comic SelectedComicItem { get; private set; }
-
         private Comic _selectedComic;
 
         public Comic SelectedComic
@@ -24,32 +22,28 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public ICommand FavoriteCommand { get; private set; }
 
-        public bool IsFavorite => GlobalVariables.FavoriteComics.Contains(SelectedComicItem);
-        public string FavoriteIcon => IsFavorite ? "btn_favourites_primary.png" : "btn_favourites_default.png";
-        public string FavoriteTitle => IsFavorite ? "ADDED TO FAVORITES" : "ADD TO FAVORITES";
-        public Color FavoriteTitleColor => IsFavorite ? Color.FromRgb(237, 29, 36) : Color.FromRgb(61, 51, 51);
-        public Color FavoriteBackgroundColor => IsFavorite ? Color.FromRgb(50, 40, 39) : Color.FromRgb(240, 240, 240);
+        public string FavoriteTitle => SelectedComic.IsFavorite ? "ADDED TO FAVORITES" : "ADD TO FAVORITES";
+        public Color FavoriteTitleColor => SelectedComic.IsFavorite ? Color.FromRgb(237, 29, 36) : Color.FromRgb(61, 51, 51);
+        public Color FavoriteBackgroundColor => SelectedComic.IsFavorite ? Color.FromRgb(50, 40, 39) : Color.FromRgb(240, 240, 240);
 
-        public ComicDetailViewModel(Comic selectedComicItem)
+        public ComicDetailViewModel(Comic selectedComic)
         {
-            SelectedComicItem = selectedComicItem;
+            SelectedComic = selectedComic;
             FavoriteCommand = new Command(FavoriteMethod);
         }
 
         private void FavoriteMethod()
         {
-            if (IsFavorite)
-                GlobalVariables.FavoriteComics.Remove(SelectedComicItem);
+            if (SelectedComic.IsFavorite)
+                GlobalVariables.FavoriteComics.Remove(SelectedComic);
             else
-                GlobalVariables.FavoriteComics.Add(SelectedComicItem);
+                GlobalVariables.FavoriteComics.Add(SelectedComic);
 
             UpdateProperties();
         }
 
         private void UpdateProperties()
         {
-            OnPropertyChanged(nameof(IsFavorite));
-            OnPropertyChanged(nameof(FavoriteIcon));
             OnPropertyChanged(nameof(FavoriteTitle));
             OnPropertyChanged(nameof(FavoriteTitleColor));
             OnPropertyChanged(nameof(FavoriteBackgroundColor));

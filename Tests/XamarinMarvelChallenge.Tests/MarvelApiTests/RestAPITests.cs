@@ -24,10 +24,10 @@ namespace Tests.MarvelApiTests
         }
 
         [Test]
-        public async Task GetComic_WhenCalled_ReturnNotNull()
+        public async Task GetComicsByCharacter_WhenCalled_ReturnNotNull()
         {
-            string resourceURI = "http://gateway.marvel.com/v1/public/comics/21366";
-            var comic = await _marvelApi.GetComic(resourceURI);
+            string resourceURI = "http://gateway.marvel.com/v1/public/characters/1011334/comics";
+            var comic = await _marvelApi.GetComicsByCharacter(resourceURI);
 
             Assert.AreNotEqual(null, comic, "Comic must not be null", null);
             Assert.Pass();

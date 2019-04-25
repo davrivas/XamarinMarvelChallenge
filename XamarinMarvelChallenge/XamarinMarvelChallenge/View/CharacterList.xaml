@@ -31,42 +31,26 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Padding="10">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Image Source="{Binding Thumbnail}" WidthRequest="100"
+                                <StackLayout Orientation="Horizontal" Padding="10">
+                                    <Image Source="{Binding Thumbnail}" WidthRequest="100"
                                            Margin="0,0,10,0" VerticalOptions="Start"/>
 
-                                        <StackLayout>
-                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
-                                            <Label>
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="Modified: " FontAttributes="Bold"/>
-                                                        <Span Text="{Binding Modified}" FontAttributes="Italic"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                            <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
-                                            <Label IsVisible="{Binding DoesNotHaveDescription}" Text="This character does not have a description"
-                                               FontAttributes="Italic"/>
-                                        </StackLayout>
-                                    </StackLayout>
-
-                                    <Label Text="Associated comics" FontAttributes="Bold" FontSize="Large"/>
-
                                     <StackLayout>
-                                        <ListView ItemsSource="{Binding Comics}" HasUnevenRows="True" 
-                                          ItemSelected="SelectComic">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <ViewCell>
-                                                        <StackLayout Padding="5">
-                                                            <Label Text="{Binding Title}"/>
-                                                        </StackLayout>
-                                                    </ViewCell>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Modified: " FontAttributes="Bold"/>
+                                                    <Span Text="{Binding Modified}" FontAttributes="Italic"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
+                                        <Label IsVisible="{Binding DoesNotHaveDescription}" 
+                                               Text="This character does not have a description"
+                                               FontAttributes="Italic"/>
+                                        <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
+                                                Command="{Binding Source={x:Reference charactersListView}, Path=BindingContext.SelectCharacterCommand}"/>
                                     </StackLayout>
                                 </StackLayout>
                             </ViewCell>

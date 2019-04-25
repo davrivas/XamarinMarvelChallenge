@@ -12,7 +12,7 @@ namespace XamarinMarvelChallenge.ViewModel
 {
     public class CharacterListViewModel : BaseViewModel
     {
-        public string SelectComicMessageName => "SelectComic";
+        public string SelectCharacterMessageName => "SelectCharacter";
         private const string _nameSortByOption = "Name";
         private const string _dateSortByOption = "Date";
 
@@ -34,11 +34,11 @@ namespace XamarinMarvelChallenge.ViewModel
             set { SetProperty(ref _searchResults, value); }
         }
 
-        public ComicDetail ComicDetailPage { get; private set; }
+        public Page CharacterDetailPage { get; private set; }
 
         public ICommand SearchCharacterCommand { get; private set; }
         public ICommand SortByCommand { get; private set; }
-        public ICommand SelectComicCommand { get; private set; }
+        public ICommand SelectCharacterCommand { get; private set; }
 
         public CharacterListViewModel()
         {
@@ -47,16 +47,16 @@ namespace XamarinMarvelChallenge.ViewModel
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
-            SelectComicCommand = new Command<object>(SelectComic);
+            SelectCharacterCommand = new Command<object>(SelectCharacter);
         }
 
-        private void SelectComic(object obj)
+        private void SelectCharacter(object obj)
         {
-            var selectedComicsItem = obj as Comic;
-            var viewModel = new ComicDetailViewModel(selectedComicsItem);
-            ComicDetailPage = new ComicDetail(viewModel);
+            var selectedCharacter = obj as Character;
+            var viewModel = new CharacterDetailViewModel(selectedCharacter);
+            CharacterDetailPage = new CharacterDetail(viewModel);
 
-            MessagingCenter.Send(this, SelectComicMessageName);
+            MessagingCenter.Send(this, SelectCharacterMessageName);
         }
 
         private void SortBy(string sortByOption)

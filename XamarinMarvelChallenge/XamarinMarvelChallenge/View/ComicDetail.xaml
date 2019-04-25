@@ -6,12 +6,14 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="20">
-                <Image Source="{Binding SelectedComic.Thumbnail}" HeightRequest="250"/>
+                <StackLayout BindingContext="{Binding SelectedComic}">
+                <Image Source="{Binding Thumbnail}" HeightRequest="250"/>
 
-                <Label Text="{Binding SelectedComic.Title}" FontAttributes="Bold" FontSize="Large"/>
-                <Label IsVisible="{Binding SelectedComic.HasDescription}" Text="{Binding SelectedComic.Description}" VerticalOptions="StartAndExpand"/>
-                <Label IsVisible="{Binding SelectedComic.DoesNotHaveDescription}" Text="This comic does not have a description" 
+                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="Large"/>
+                <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}" VerticalOptions="StartAndExpand"/>
+                <Label IsVisible="{Binding DoesNotHaveDescription}" Text="This comic does not have a description" 
                        FontAttributes="Italic" VerticalOptions="StartAndExpand"/>
+                </StackLayout>
 
                 <StackLayout BackgroundColor="{Binding FavoriteBackgroundColor}" Padding="10" HorizontalOptions="FillAndExpand">
                     <StackLayout.GestureRecognizers>
@@ -19,7 +21,7 @@
                     </StackLayout.GestureRecognizers>
 
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                        <Image Source="{Binding FavoriteIcon}"/>
+                        <Image Source="{Binding SelectedComic.FavoriteIcon}"/>
                         <Label Text="{Binding FavoriteTitle}" TextColor="{Binding FavoriteTitleColor}" FontAttributes="Bold" VerticalOptions="Center"/>
                     </StackLayout>
                 </StackLayout>
