@@ -24,10 +24,12 @@ namespace XamarinMarvelChallenge.View
             base.OnAppearing();
 
             if (GlobalVariables.Characters == null)
+            {
                 GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
+                _viewModel.IsBusy = false;
+                _viewModel.IsNotBusy = true;
+            }
 
-            _viewModel.IsBusy = false;
-            _viewModel.IsNotBusy = true;
             _viewModel.GetSearchResults();
 
             MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel, 

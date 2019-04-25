@@ -42,8 +42,8 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public CharacterListViewModel()
         {
-            IsBusy = true;
-            IsNotBusy = false;
+            IsBusy = GlobalVariables.Characters == null;
+            IsNotBusy = GlobalVariables.Characters != null;
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
