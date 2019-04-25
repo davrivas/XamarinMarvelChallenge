@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XamarinMarvelChallenge.View.CharacterList"
-             Title="Characters">
+             Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
@@ -48,7 +48,8 @@
                                                FontAttributes="Italic"/>
                                             <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
                                                 Command="{Binding Source={x:Reference charactersListView},
-                                                Path=BindingContext.SelectCharacterCommand}"/>
+                                                Path=BindingContext.SelectCharacterCommand}"
+                                                    HorizontalOptions="Start"/>
                                         </StackLayout>
                                     </StackLayout>
                                 </ViewCell>

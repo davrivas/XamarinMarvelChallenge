@@ -46,11 +46,13 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICommand SortByCommand { get; private set; }
         public ICommand SelectCharacterCommand { get; private set; }
 
-        public bool HasCharacters => GlobalVariables.Characters == null ? false : SearchResults.Count > 0;
-        public bool DoesNotHaveCharacters => GlobalVariables.Characters == null ? true : SearchResults.Count == 0;
+        public bool HasCharacters => SearchResults.Count > 0;
+        public bool DoesNotHaveCharacters => SearchResults.Count == 0;
 
         public CharacterListViewModel()
         {
+            Title = "Characters";
+            SearchResults = new ObservableCollection<Character>();
             IsBusy = GlobalVariables.Characters == null;
             IsNotBusy = GlobalVariables.Characters != null;
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
