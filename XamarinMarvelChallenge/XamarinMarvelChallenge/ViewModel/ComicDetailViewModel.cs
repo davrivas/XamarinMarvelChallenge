@@ -8,17 +8,7 @@ namespace XamarinMarvelChallenge.ViewModel
 {
     public class ComicDetailViewModel : BaseViewModel
     {
-        private Comic _selectedComic;
-
-        public Comic SelectedComic
-        {
-            get { return _selectedComic; }
-            set
-            {
-                SetProperty(ref _selectedComic, value);
-                UpdateProperties();
-            }
-        }
+        public Comic SelectedComic { get; private set; }
 
         public ICommand FavoriteCommand { get; private set; }
 

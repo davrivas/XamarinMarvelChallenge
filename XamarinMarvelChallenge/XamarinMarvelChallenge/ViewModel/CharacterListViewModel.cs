@@ -32,7 +32,12 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICollection<Character> SearchResults
         {
             get { return _searchResults; }
-            set { SetProperty(ref _searchResults, value); }
+            set
+            {
+                SetProperty(ref _searchResults, value);
+                OnPropertyChanged(nameof(HasCharacters));
+                OnPropertyChanged(nameof(DoesNotHaveCharacters));
+            }
         }
 
         public Page CharacterDetailPage { get; private set; }
@@ -40,6 +45,9 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICommand SearchCharacterCommand { get; private set; }
         public ICommand SortByCommand { get; private set; }
         public ICommand SelectCharacterCommand { get; private set; }
+
+        public bool HasCharacters => SearchResults.Count > 0;
+        public bool DoesNotHaveCharacters => SearchResults.Count == 0;
 
         public CharacterListViewModel()
         {
