@@ -16,7 +16,7 @@ namespace XamarinMarvelChallenge.View
         {
             InitializeComponent();
             _viewModel = new CharacterListViewModel();
-            
+            BindingContext = _viewModel;
         }
 
         protected override async void OnAppearing()
@@ -29,7 +29,6 @@ namespace XamarinMarvelChallenge.View
             _viewModel.IsBusy = false;
             _viewModel.IsNotBusy = true;
             _viewModel.GetSearchResults();
-            BindingContext = _viewModel;
 
             MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel, 
                 _viewModel.SelectCharacterMessageName, 
