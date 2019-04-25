@@ -61,9 +61,26 @@ namespace XamarinMarvelChallenge.MarvelApi
                     string fullPath = path + "." + extension;
 
                     var comics = (JObject)result["comics"];
-                    string collectionURI = (string)comics["collectionURI"];
+                    var items = (JArray)comics["items"];
 
-                    var comicsCollection = await GetComicsByCharacter(collectionURI);
+                    var comicsCollection = new ObservableCollection<CharacterComic>();
+
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        var item = items[i];
+                        string resourceURI = (string)item["resourceURI"];
+                        string comicName = (string)item["name"];
+
+                        var newComic = new CharacterComic
+                        {
+                            Name = comicName,
+                            ResourceURI = resourceURI
+                        };
+                        comicsCollection.Add(newComic);
+
+                        if (i == 3)
+                            break;
+                    }
 
                     var character = new Character
                     {
@@ -85,9 +102,9 @@ namespace XamarinMarvelChallenge.MarvelApi
             return characters;
         }
 
-        public async Task<ObservableCollection<Comic>> GetComicsByCharacter(string resourceURI)
+        public async Task<Comic> GetComicByCharacter(string resourceURI)
         {
-            ObservableCollection<Comic> comics;
+            Comic comic;
 
             string requestURL = SetupRequestUrl(resourceURI);
 
@@ -108,39 +125,30 @@ namespace XamarinMarvelChallenge.MarvelApi
                 var successfulResponse = JObject.Parse(jsonString);
                 var data = (JObject)successfulResponse["data"];
                 var results = (JArray)data["results"];
+                var firstComic = results[0];
 
-                comics = new ObservableCollection<Comic>();
+                string title = (string)firstComic["title"];
+                string description = (string)firstComic["description"];
 
-                for (int i = 0; i < results.Count; i++)
+                var thumbnail = (JObject)firstComic["thumbnail"];
+                string path = (string)thumbnail["path"];
+                string extension = (string)thumbnail["extension"];
+                string fullPath = path + "." + extension;
+
+                comic = new Comic
                 {
-                    var result = results[i];
-                    string title = (string)result["title"];
-                    string description = (string)result["description"];
-
-                    var thumbnail = (JObject)result["thumbnail"];
-                    string path = (string)thumbnail["path"];
-                    string extension = (string)thumbnail["extension"];
-                    string fullPath = path + "." + extension;
-
-                    var comic = new Comic
-                    {
-                        Title = title,
-                        Description = description,
-                        Thumbnail = fullPath
-                    };
-                    comics.Add(comic);
-
-                    if (i == 3) // if it is 4
-                        break;
-                }
+                    Title = title,
+                    Description = description,
+                    Thumbnail = fullPath
+                };
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.StackTrace);
-                comics = null;
+                comic = null;
             }
 
-            return comics;
+            return comic;
         }
 
         private string SetupRequestUrl(string resourceURI)

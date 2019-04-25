@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model.App;
 using XamarinMarvelChallenge.View;
 
@@ -11,7 +10,7 @@ namespace XamarinMarvelChallenge.ViewModel
 {
     public class MainMenuViewModel
     {
-        public string Attribution => GlobalVariables.Attribution;
+        public string Attribution => $"Data provided by Marvel. © 2014-{DateTime.Now.Year} Marvel";
         public string SelectMenuItemMessageName => "SelectMenuItem";
 
         public Type SelectedDestination { get; private set; }
@@ -25,7 +24,7 @@ namespace XamarinMarvelChallenge.ViewModel
             MenuItems = new ObservableCollection<AppMenuItem>
             {
                 new AppMenuItem("Characters", "characters.png", typeof(CharacterList)),
-                new AppMenuItem("Favorite comics", "btn_favourites_primary.png", typeof(FavoriteComics)) // must be Favorites page
+                new AppMenuItem("Favorite comics", "btn_favourites_primary.png", typeof(FavoriteComics))
             };
             SelectMenuItemCommand = new Command<object>(SelectMenuItem);
         }

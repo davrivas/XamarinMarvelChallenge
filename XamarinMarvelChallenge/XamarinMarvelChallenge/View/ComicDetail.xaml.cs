@@ -14,17 +14,15 @@ namespace XamarinMarvelChallenge.View
         {
             InitializeComponent();
             _viewModel = viewModel;
+            BindingContext = _viewModel;
         }
 
-        protected override /*async*/ void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            //string resourceURI = _viewModel.SelectedComicItem.ResourceURI;
-            //_viewModel.SelectedComic = await GlobalVariables.RestApi.GetComicsByCharacter(resourceURI);
-            _viewModel.Title = _viewModel.SelectedComic.Title;
-
-            BindingContext = _viewModel;
+            string resourceURI = _viewModel.SelectedCharacterComic.ResourceURI;
+            _viewModel.SelectedComic = await GlobalVariables.RestApi.GetComicByCharacter(resourceURI);
         }
     }
 }

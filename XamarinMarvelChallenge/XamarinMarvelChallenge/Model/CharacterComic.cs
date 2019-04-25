@@ -2,7 +2,7 @@
 {
     public class CharacterComic
     {
-        public string ComicTitle { get; set; }
-        public string ComicResourceURI { get; set; }
+        public string Name { get; set; }
+        public string ResourceURI { get; set; }
     }
 }

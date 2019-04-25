@@ -16,7 +16,7 @@ namespace XamarinMarvelChallenge
             InitializeComponent();
 
             GlobalVariables.RestApi = new RestApi();
-            GlobalVariables.FavoriteComics = new ObservableCollection<Comic>();
+            GlobalVariables.FavoriteComics = new ObservableCollection<CharacterComic>();
             MainPage = new NavigationPage(new MainMenu());
         }
 

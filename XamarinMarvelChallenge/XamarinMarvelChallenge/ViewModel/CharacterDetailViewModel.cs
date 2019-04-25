@@ -1,6 +1,8 @@
 ﻿using MvvmHelpers;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.View;
 
@@ -19,13 +21,15 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             SelectedCharacter = selectedCharacter;
             Title = SelectedCharacter.Name;
-            SelectComicCommand = new Command<object>(SelectComic);
+            SelectComicCommand = new Command<object>(async (vm) => await SelectComic(vm));
         }
 
-        private void SelectComic(object obj)
+        private async Task SelectComic(object obj)
         {
-            var selectedComic = obj as Comic;
-            var viewModel = new ComicDetailViewModel(selectedComic);
+            var selectedCharacterComic = obj as CharacterComic;
+            string resourceURI = selectedCharacterComic.ResourceURI;
+            var selectedComic = await GlobalVariables.RestApi.GetComicByCharacter(resourceURI);
+            var viewModel = new ComicDetailViewModel(selectedCharacterComic, selectedComic);
             ComicPage = new ComicDetail(viewModel);
 
             MessagingCenter.Send(this, SelectComicMessageName);
