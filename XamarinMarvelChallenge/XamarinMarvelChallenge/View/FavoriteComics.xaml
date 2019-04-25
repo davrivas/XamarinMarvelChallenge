@@ -12,13 +12,16 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Padding="10" Orientation="Horizontal">
-                                <Image Source="{Binding Thumbnail}" HeightRequest="200" HorizontalOptions="StartAndExpand"/>
+                            <StackLayout Padding="10">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
 
-                                <StackLayout >
-                                    <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="Large"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <Button Style="{StaticResource redButton}" Text="View details" 
+                                        CommandParameter="{Binding .}" HorizontalOptions="Start"
+                                        Command="{Binding Source={x:Reference favoriteComicsListView}, 
+                                        Path=BindingContext.SelectComicCommand}"/>
                                     <Button Style="{StaticResource redButton}" Text="Remove from favorites" 
-                                        CommandParameter="{Binding .}" VerticalOptions="Center"
+                                        CommandParameter="{Binding .}" HorizontalOptions="Start"
                                         Command="{Binding Source={x:Reference favoriteComicsListView}, 
                                         Path=BindingContext.RemoveFromFavoritesCommand}"/>
                                 </StackLayout>
