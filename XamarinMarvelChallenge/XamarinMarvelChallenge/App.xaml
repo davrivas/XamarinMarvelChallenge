@@ -7,5 +7,9 @@
             <Setter Property="BackgroundColor" Value="Red"/>
             <Setter Property="TextColor" Value="White"/>
         </Style>
+        <Style x:Key="titleText" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="FontSize" Value="Large"/>
+        </Style>
     </Application.Resources>
 </Application>

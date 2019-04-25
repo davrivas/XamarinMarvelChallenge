@@ -7,7 +7,7 @@
             <ContentPage.Content>
                 <StackLayout Padding="10">
                     <Label Text="Xamarin Marvel Challenge" HorizontalTextAlignment="Center" 
-                           FontAttributes="Bold" FontSize="Large" Margin="0,0,0,10"/>
+                           Style="{StaticResource titleText}" Margin="0,0,0,10"/>
 
                     <ListView x:Name="menuItemsListView" ItemsSource="{Binding MenuItems}" HasUnevenRows="True" 
                               ItemTapped="SelectMenuItem" VerticalOptions="StartAndExpand">

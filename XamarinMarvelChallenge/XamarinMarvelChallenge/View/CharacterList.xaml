@@ -15,7 +15,7 @@
 
             <StackLayout Orientation="Horizontal" Padding="10">
                 <Image Source="characters.png" VerticalOptions="Center"/>
-                <Label Text="Characters" FontAttributes="Bold" VerticalOptions="Center" FontSize="Large"/>
+                <Label Text="Characters" Style="{StaticResource titleText}" FontSize="Large"/>
                 <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}"
                         SelectedIndexChanged="SortByPickOption"
                         HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
@@ -33,7 +33,7 @@
                                                Margin="0,0,10,0" VerticalOptions="Start"/>
 
                                         <StackLayout>
-                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
+                                            <Label Text="{Binding Name}" Style="{StaticResource titleText}"/>
                                             <Label>
                                                 <Label.FormattedText>
                                                     <FormattedString>

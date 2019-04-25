@@ -13,7 +13,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Padding="10">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
+                                <Label Text="{Binding Name}" Style="{StaticResource titleText}"/>
 
                                 <StackLayout Orientation="Horizontal">
                                     <Button Style="{StaticResource redButton}" Text="View details" 
