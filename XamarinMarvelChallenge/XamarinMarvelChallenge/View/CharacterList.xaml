@@ -21,46 +21,49 @@
                         HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
             </StackLayout>
 
-            <StackLayout IsVisible="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
-                <Label Text="Please wait until the data is retrieved..."
-                       VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
-            </StackLayout>
-
-            <StackLayout IsVisible="{Binding IsNotBusy}">
-                <ListView x:Name="charactersListView" IsVisible="{Binding HasCharacters}"
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout IsVisible="{Binding IsNotBusy}">
+                    <ListView x:Name="charactersListView" IsVisible="{Binding HasCharacters}"
                           ItemsSource="{Binding SearchResults}" HasUnevenRows="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal" Padding="10">
-                                    <Image Source="{Binding Thumbnail}" WidthRequest="100"
-                                           Margin="0,0,10,0" VerticalOptions="Start"/>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="10">
+                                        <Image Source="{Binding Thumbnail}" WidthRequest="100"
+                                               Margin="0,0,10,0" VerticalOptions="Start"/>
 
-                                    <StackLayout>
-                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
-                                        <Label>
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="Modified: " FontAttributes="Bold"/>
-                                                    <Span Text="{Binding Modified}" FontAttributes="Italic"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
-                                        <Label IsVisible="{Binding DoesNotHaveDescription}" 
+                                        <StackLayout>
+                                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
+                                            <Label>
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Modified: " FontAttributes="Bold"/>
+                                                        <Span Text="{Binding Modified}" FontAttributes="Italic"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
+                                            <Label IsVisible="{Binding DoesNotHaveDescription}" 
                                                Text="This character does not have a description"
                                                FontAttributes="Italic"/>
-                                        <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
+                                            <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
                                                 Command="{Binding Source={x:Reference charactersListView},
                                                 Path=BindingContext.SelectCharacterCommand}"/>
+                                        </StackLayout>
                                     </StackLayout>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <Label IsVisible="{Binding DoesNotHaveCharacters}" Text="Please wait until the data is retrieved..."
-                       VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    
+                    <Label IsVisible="{Binding DoesNotHaveCharacters}" Text="There are not characters matching with your search"
+                           VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label Text="Please wait until the data is retrieved..."
+                           VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                </StackLayout>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
