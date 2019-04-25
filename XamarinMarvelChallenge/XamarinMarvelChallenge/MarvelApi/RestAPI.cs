@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.Extensions;
 using XamarinMarvelChallenge.Model;
-using XamarinMarvelChallenge.Utils;
 
 namespace XamarinMarvelChallenge.MarvelApi
 {
@@ -16,11 +15,6 @@ namespace XamarinMarvelChallenge.MarvelApi
 
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
-
-        private string _ts;
-        private string _hashString;
-        private string _md5Hash;
-        private string _requestUrl;
 
         public RestApi()
         {
@@ -33,13 +27,13 @@ namespace XamarinMarvelChallenge.MarvelApi
             ObservableCollection<Character> characters;
 
             string baseUrl = "http://gateway.marvel.com/v1/public/characters";
-            SetupRequestUrl(baseUrl);
+            string requestURL = SetupRequestUrl(baseUrl);
 
             HttpResponseMessage response;
 
             try
             {
-                response = await _client.GetAsync(_requestUrl);
+                response = await _client.GetAsync(requestURL);
                 response.EnsureSuccessStatusCode();
 
                 string jsonString;
@@ -55,12 +49,14 @@ namespace XamarinMarvelChallenge.MarvelApi
 
                 characters = new ObservableCollection<Character>();
 
-                foreach (var result in results)
+                //foreach (var result in results)
+                for (int i = 0; i < 1; i++)
                 {
+                    var result = results[i];
                     string name = (string)result["name"];
                     string description = (string)result["description"];
-                    string modifiedString = (string)result["modified"];
-                    DateTime modified = Convert.ToDateTime(modifiedString);
+                    DateTime modified = (DateTime)result["modified"];
+                    //DateTime modified = Convert.ToDateTime(modifiedString);
 
                     var thumnail = (JObject)result["thumbnail"];
                     string path = (string)thumnail["path"];
@@ -96,13 +92,13 @@ namespace XamarinMarvelChallenge.MarvelApi
         {
             ObservableCollection<Comic> comics;
 
-            SetupRequestUrl(resourceURI);
+            string requestURL = SetupRequestUrl(resourceURI);
 
             HttpResponseMessage response;
 
             try
             {
-                response = await _client.GetAsync(_requestUrl);
+                response = await _client.GetAsync(requestURL);
                 response.EnsureSuccessStatusCode();
 
                 string jsonString;
@@ -150,15 +146,14 @@ namespace XamarinMarvelChallenge.MarvelApi
             return comics;
         }
 
-        private void SetupRequestUrl(string resourceURI)
+        private string SetupRequestUrl(string resourceURI)
         {
-            _ts = DateTime.Now.GetCurrentTimestampInMiliseconds();
-            _hashString = string.Format("{0}{1}{2}", _ts, _privateKey, _publicKey);
-            _md5Hash = _hashString.GetMD5Hash();
-            _requestUrl = resourceURI
-                + "?apikey=" + _publicKey
-                + "&ts=" + _ts
-                + "&hash=" + _md5Hash;
+            string ts = DateTime.Now.GetCurrentTimestampInMiliseconds();
+            string hashString = string.Format("{0}{1}{2}", ts, _privateKey, _publicKey);
+            string md5Hash = hashString.GetMD5Hash();
+            string requestUrl = string.Format("{0}?apikey={1}&ts={2}&hash={3}", resourceURI, _publicKey, ts, md5Hash);
+
+            return requestUrl;
         }
     }
 }

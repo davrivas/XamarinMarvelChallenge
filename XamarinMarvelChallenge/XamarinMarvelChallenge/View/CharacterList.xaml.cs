@@ -24,16 +24,10 @@ namespace XamarinMarvelChallenge.View
             base.OnAppearing();
 
             if (GlobalVariables.Characters == null)
-            {
-                if (_viewModel.IsBusy && !_viewModel.IsNotBusy)
-                {
-                    GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
-                    _viewModel.IsBusy = false;
-                    _viewModel.IsNotBusy = true;
+                GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
 
-                }
-            }
-
+            _viewModel.IsBusy = false;
+            _viewModel.IsNotBusy = true;
             _viewModel.GetSearchResults();
             BindingContext = _viewModel;
 
@@ -60,7 +54,7 @@ namespace XamarinMarvelChallenge.View
                 return;
 
             _viewModel.SelectCharacterCommand.Execute(e.SelectedItem);
-            (sender as ListView).SelectedItem = null;
+            charactersListView.SelectedItem = null;
         }
 
         private async Task HandleSelectCharacter(CharacterListViewModel viewModel)

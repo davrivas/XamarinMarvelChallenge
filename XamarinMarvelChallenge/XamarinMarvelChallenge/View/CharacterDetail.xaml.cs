@@ -21,7 +21,8 @@ namespace XamarinMarvelChallenge.View
         {
             base.OnAppearing();
 
-            MessagingCenter.Subscribe<CharacterDetailViewModel>(_viewModel, _viewModel.SelectComicMessageName,
+            MessagingCenter.Subscribe<CharacterDetailViewModel>(_viewModel, 
+                _viewModel.SelectComicMessageName,
                 async (viewModel) => await HandleSelectComic(viewModel));
         }
 
