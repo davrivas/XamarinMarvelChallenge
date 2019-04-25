@@ -46,8 +46,8 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICommand SortByCommand { get; private set; }
         public ICommand SelectCharacterCommand { get; private set; }
 
-        public bool HasCharacters => SearchResults.Count > 0;
-        public bool DoesNotHaveCharacters => SearchResults.Count == 0;
+        public bool HasCharacters => GlobalVariables.Characters == null ? false : SearchResults.Count > 0;
+        public bool DoesNotHaveCharacters => GlobalVariables.Characters == null ? true : SearchResults.Count == 0;
 
         public CharacterListViewModel()
         {

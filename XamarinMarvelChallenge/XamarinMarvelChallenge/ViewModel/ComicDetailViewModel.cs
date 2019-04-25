@@ -21,6 +21,7 @@ namespace XamarinMarvelChallenge.ViewModel
         public ComicDetailViewModel(Comic selectedComic)
         {
             SelectedComic = selectedComic;
+            Title = SelectedComic.Title;
             FavoriteCommand = new Command(FavoriteMethod);
         }
 
