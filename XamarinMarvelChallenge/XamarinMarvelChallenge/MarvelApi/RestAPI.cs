@@ -50,12 +50,10 @@ namespace XamarinMarvelChallenge.MarvelApi
                 characters = new ObservableCollection<Character>();
 
                 foreach (var result in results)
-                    //for (int i = 0; i < 1; i++)
                 {
-                    //var result = results[i];
                     string name = (string)result["name"];
                     string description = (string)result["description"];
-                    DateTime modified = (DateTime)result["modified"];
+                    var modified = (DateTime)result["modified"];
 
                     var thumnail = (JObject)result["thumbnail"];
                     string path = (string)thumnail["path"];
