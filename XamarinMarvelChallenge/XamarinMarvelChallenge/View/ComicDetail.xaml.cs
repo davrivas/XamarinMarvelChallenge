@@ -20,7 +20,7 @@ namespace XamarinMarvelChallenge.View
         {
             base.OnAppearing();
 
-            string resourceURI = _viewModel.ResourceURI;
+            string resourceURI = _viewModel.SelectedComicItem.ResourceURI;
             _viewModel.SelectedComic = await GlobalVariables.RestApi.GetComic(resourceURI);
             _viewModel.Title = _viewModel.SelectedComic.Title;
 

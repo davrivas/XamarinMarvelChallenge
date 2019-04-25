@@ -6,17 +6,17 @@ using XamarinMarvelChallenge.ViewModel;
 namespace XamarinMarvelChallenge.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainMasterDetailPage : MasterDetailPage
+    public partial class MainMenu : MasterDetailPage
     {
-        private readonly MainMasterDetailPageViewModel _viewModel;
+        private readonly MainMenuViewModel _viewModel;
 
-        public MainMasterDetailPage()
+        public MainMenu()
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
             Detail = new NavigationPage(((Page)Activator.CreateInstance(typeof(CharacterList))));
 
-            _viewModel = new MainMasterDetailPageViewModel();
+            _viewModel = new MainMenuViewModel();
             BindingContext = _viewModel;
         }
 

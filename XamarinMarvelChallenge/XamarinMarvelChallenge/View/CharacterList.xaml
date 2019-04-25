@@ -4,57 +4,76 @@
              x:Class="XamarinMarvelChallenge.View.CharacterList"
              Title="Characters">
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout>
-                <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
-                    <Image Source="marvel_logo.png" HeightRequest="25"/>
-                    <Entry Text="{Binding SearchText}" Placeholder="Search" HorizontalOptions="FillAndExpand" ReturnType="Search" 
-                           BackgroundColor="Transparent" PlaceholderColor="LightGray" TextColor="White" 
-                           ReturnCommand="{Binding SearchCharacterCommand}" />
-                </StackLayout>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
+                <Image Source="marvel_logo.png" HeightRequest="25"/>
+                <Entry Text="{Binding SearchText}" Placeholder="Search" 
+                       HorizontalOptions="FillAndExpand" ReturnType="Search"
+                       BackgroundColor="Transparent" PlaceholderColor="LightGray" TextColor="White"
+                       ReturnCommand="{Binding SearchCharacterCommand}" />
+            </StackLayout>
 
-                <StackLayout Orientation="Horizontal" Padding="10">
-                    <Image Source="characters.png" VerticalOptions="Center"/>
-                    <Label Text="Characters" FontAttributes="Bold"  VerticalOptions="Center" FontSize="Large"/>
-                    <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}" 
-                            SelectedIndexChanged="SortByPickOption"
-                            HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-                </StackLayout>
+            <StackLayout Orientation="Horizontal" Padding="10">
+                <Image Source="characters.png" VerticalOptions="Center"/>
+                <Label Text="Characters" FontAttributes="Bold" VerticalOptions="Center" FontSize="Large"/>
+                <Picker x:Name="sortByPicker" Title="Sort by" ItemsSource="{Binding SortByOptions}"
+                        SelectedIndexChanged="SortByPickOption"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+            </StackLayout>
 
+            <StackLayout IsVisible="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+                <Label Text="Please wait until the data is retrieved..."
+                       VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+
+            <StackLayout IsVisible="{Binding IsNotBusy}">
                 <ListView x:Name="charactersListView" ItemsSource="{Binding SearchResults}" HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Padding="10">
                                     <StackLayout Orientation="Horizontal">
-                                        <Image Source="{Binding Thumbnail.PathAndExtension}" WidthRequest="100" 
-                                               Margin="0,0,10,0" VerticalOptions="Start"/>
+                                        <Image Source="{Binding Thumbnail}" WidthRequest="100"
+                                           Margin="0,0,10,0" VerticalOptions="Start"/>
 
                                         <StackLayout>
                                             <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large"/>
-                                            <Label Text="{Binding Description}"/>
+                                            <Label>
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Modified: " FontAttributes="Bold"/>
+                                                        <Span Text="{Binding Modified}" FontAttributes="Italic"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
+                                            <Label IsVisible="{Binding DoesNotHaveDescription}" Text="This character does not have a description"
+                                               FontAttributes="Italic"/>
                                         </StackLayout>
                                     </StackLayout>
 
                                     <Label Text="Associated comics" FontAttributes="Bold" FontSize="Large"/>
-                                    
-                                    <ListView ItemsSource="{Binding Comics.AssociatedComics}" HasUnevenRows="True" ItemSelected="SelectComic">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <ViewCell>
-                                                    <StackLayout Padding="5">
-                                                        <Label Text="{Binding Name}"/>
-                                                    </StackLayout>
-                                                </ViewCell>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
+
+                                    <StackLayout>
+                                        <ListView ItemsSource="{Binding Comics}" HasUnevenRows="True" 
+                                          ItemSelected="SelectComic">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ViewCell>
+                                                        <StackLayout Padding="5">
+                                                            <Label Text="{Binding Title}"/>
+                                                        </StackLayout>
+                                                    </ViewCell>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackLayout>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-        </ScrollView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

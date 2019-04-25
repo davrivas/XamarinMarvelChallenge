@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 using XamarinMarvelChallenge.Globals;
-using XamarinMarvelChallenge.Model.Characters;
+using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.View;
 
 namespace XamarinMarvelChallenge.ViewModel
@@ -42,7 +42,8 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public CharacterListViewModel()
         {
-            SearchResults = GlobalVariables.Characters;
+            IsBusy = true;
+            IsNotBusy = false;
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
@@ -51,8 +52,8 @@ namespace XamarinMarvelChallenge.ViewModel
 
         private void SelectComic(object obj)
         {
-            var selectedComicsItem = obj as ComicsItem;
-            var viewModel = new ComicDetailViewModel(selectedComicsItem.ResourceURI);
+            var selectedComicsItem = obj as Comic;
+            var viewModel = new ComicDetailViewModel(selectedComicsItem);
             ComicDetailPage = new ComicDetail(viewModel);
 
             MessagingCenter.Send(this, SelectComicMessageName);
@@ -78,7 +79,7 @@ namespace XamarinMarvelChallenge.ViewModel
             SearchResults = orderedResults;
         }
 
-        private void GetSearchResults()
+        public void GetSearchResults()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
                 SearchResults = GlobalVariables.Characters;

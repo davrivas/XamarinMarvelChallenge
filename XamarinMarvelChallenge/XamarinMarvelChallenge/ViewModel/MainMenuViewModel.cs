@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -9,7 +8,7 @@ using XamarinMarvelChallenge.View;
 
 namespace XamarinMarvelChallenge.ViewModel
 {
-    public class MainMasterDetailPageViewModel
+    public class MainMenuViewModel
     {
         public string Attribution => GlobalVariables.Attribution;
 
@@ -17,7 +16,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public ICommand SelectMenuItemCommand { get; private set; }
 
-        public MainMasterDetailPageViewModel()
+        public MainMenuViewModel()
         {
             MenuItems = new ObservableCollection<AppMenuItem>
             {

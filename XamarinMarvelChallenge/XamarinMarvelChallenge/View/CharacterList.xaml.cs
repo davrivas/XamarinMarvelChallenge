@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.ViewModel;
 
 namespace XamarinMarvelChallenge.View
@@ -15,16 +15,30 @@ namespace XamarinMarvelChallenge.View
         {
             InitializeComponent();
             _viewModel = new CharacterListViewModel();
-            BindingContext = _viewModel;
+            
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
+            if (GlobalVariables.Characters == null)
+            {
+                if (_viewModel.IsBusy && !_viewModel.IsNotBusy)
+                {
+                    GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
+                    _viewModel.IsBusy = false;
+                    _viewModel.IsNotBusy = true;
+
+                }
+            }
+
+            _viewModel.GetSearchResults();
+            BindingContext = _viewModel;
+
             MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel, _viewModel.SelectComicMessageName, async (sender) =>
             {
-                await HandleSelectComic(sender);
+                await Navigation.PushAsync(sender.ComicDetailPage);
             });
         }
 
@@ -47,11 +61,6 @@ namespace XamarinMarvelChallenge.View
 
             _viewModel.SelectComicCommand.Execute(e.SelectedItem);
             (sender as ListView).SelectedItem = null;
-        }
-
-        private async Task HandleSelectComic(CharacterListViewModel viewModel)
-        {
-            await Navigation.PushAsync(viewModel.ComicDetailPage);
         }
     }
 }

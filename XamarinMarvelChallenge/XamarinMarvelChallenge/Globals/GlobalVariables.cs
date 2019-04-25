@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using XamarinMarvelChallenge.MarvelApi;
-using XamarinMarvelChallenge.Model.Characters;
-using XamarinMarvelChallenge.Model.Comic;
+using XamarinMarvelChallenge.Model;
 
 namespace XamarinMarvelChallenge.Globals
 {

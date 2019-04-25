@@ -3,7 +3,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.MarvelApi;
-using XamarinMarvelChallenge.Model.Comic;
+using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.View;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -17,7 +17,7 @@ namespace XamarinMarvelChallenge
 
             GlobalVariables.RestApi = new RestApi();
             GlobalVariables.FavoriteComics = new ObservableCollection<Comic>();
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new MainMenu());
         }
 
         protected override void OnStart()
