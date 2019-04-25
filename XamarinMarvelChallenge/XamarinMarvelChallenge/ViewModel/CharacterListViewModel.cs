@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using XamarinMarvelChallenge.Extensions;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.View;
@@ -75,7 +76,7 @@ namespace XamarinMarvelChallenge.ViewModel
                     break;
             }
 
-            var orderedResults = new ObservableCollection<Character>(searchResultsIEnumerable);
+            var orderedResults = searchResultsIEnumerable.ToObservableCollection();
             SearchResults = orderedResults;
         }
 
