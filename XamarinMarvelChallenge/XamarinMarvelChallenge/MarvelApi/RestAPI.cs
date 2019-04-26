@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.Extensions;
+using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 
 namespace XamarinMarvelChallenge.MarvelApi
@@ -16,24 +17,40 @@ namespace XamarinMarvelChallenge.MarvelApi
         private const string _publicKey = "f1def8f826359cbe621637efac4cf74c";
         private const string _privateKey = "7fc3dd9c612f602117833595018a48d4b0183d32";
 
+        private string _ts;
+        private string _hashString;
+        private string _md5Hash;
+
         public RestApi()
         {
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
-        public async Task<ObservableCollection<Character>> GetCharactersAsync()
+        public async Task<ObservableCollection<Character>> GetCharactersAsync(string nameStartsWith = null, string orderBy = null, int? offset = null)
         {
             ObservableCollection<Character> characters;
 
             string baseUrl = "http://gateway.marvel.com/v1/public/characters";
-            string requestURL = SetupRequestUrl(baseUrl);
+            SetupRequestMD5Hash();
+            string requestUrl = baseUrl + "?";
+
+            if (nameStartsWith != null)
+                requestUrl += "nameStartsWith=" + nameStartsWith + "&";
+
+            if (orderBy != null)
+                requestUrl += "orderBy=" + orderBy + "&";
+            
+            requestUrl += "limit=" + GlobalVariables.CharacterLimit.ToString()
+                + "&apikey=" + _publicKey
+                + "&ts=" + _ts
+                + "&hash=" + _md5Hash;
 
             HttpResponseMessage response;
 
             try
             {
-                response = await _client.GetAsync(requestURL);
+                response = await _client.GetAsync(requestUrl);
                 response.EnsureSuccessStatusCode();
 
                 string jsonString;
@@ -106,13 +123,14 @@ namespace XamarinMarvelChallenge.MarvelApi
         {
             Comic comic;
 
-            string requestURL = SetupRequestUrl(resourceURI);
+            SetupRequestMD5Hash();
+            string requestUrl = string.Format("{0}?apikey={1}&ts={2}&hash={3}", resourceURI, _publicKey, _ts, _md5Hash);
 
             HttpResponseMessage response;
 
             try
             {
-                response = await _client.GetAsync(requestURL);
+                response = await _client.GetAsync(requestUrl);
                 response.EnsureSuccessStatusCode();
 
                 string jsonString;
@@ -151,14 +169,11 @@ namespace XamarinMarvelChallenge.MarvelApi
             return comic;
         }
 
-        private string SetupRequestUrl(string resourceURI)
+        private void SetupRequestMD5Hash()
         {
-            string ts = DateTime.Now.GetCurrentTimestampInMiliseconds();
-            string hashString = string.Format("{0}{1}{2}", ts, _privateKey, _publicKey);
-            string md5Hash = hashString.GetMD5Hash();
-            string requestUrl = string.Format("{0}?apikey={1}&ts={2}&hash={3}", resourceURI, _publicKey, ts, md5Hash);
-
-            return requestUrl;
+            _ts = DateTime.Now.GetCurrentTimestampInMiliseconds();
+            _hashString = string.Format("{0}{1}{2}", _ts, _privateKey, _publicKey);
+            _md5Hash = _hashString.GetMD5Hash();
         }
     }
 }

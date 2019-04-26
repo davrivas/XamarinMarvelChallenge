@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Extended;
 using XamarinMarvelChallenge.Extensions;
+using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.Services;
 using XamarinMarvelChallenge.View;
@@ -19,6 +20,11 @@ namespace XamarinMarvelChallenge.ViewModel
         private readonly CharacterDataService _dataService;
         public const string NameSortByOption = "Name";
         public const string DateSortByOption = "Date";
+
+        // If it is 0 is not ordered, if it is -1 is descending and 1 is ascending
+        public int NameOrder { get; set; }
+        public int DateOrder { get; set; }
+        public int? Offset { get; set; }
 
         private string _searchText;
 
@@ -48,13 +54,19 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             _dataService = new CharacterDataService();
             Title = "Characters";
+
             Characters = new InfiniteScrollCollection<Character>
             {
                 OnLoadMore = async () => await LoadMoreCharactersAsync(),
                 OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count
             };
             Task.Run(() => DownloadDataAsync()).Wait();
+
             SortByOptions = new string[] { NameSortByOption, DateSortByOption };
+            NameOrder = 0;
+            DateOrder = 0;
+            Offset = null;
+
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
             SelectCharacterCommand = new Command<object>(SelectCharacter);
@@ -62,7 +74,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
         private async Task DownloadDataAsync()
         {
-            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(0, _pageSize);
+            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(0, GlobalVariables.CharacterLimit);
             Characters.AddRange(items);
         }
 
@@ -70,7 +82,7 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             IsBusy = true;
             int page = Characters.Count / _pageSize;
-            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(page, _pageSize);
+            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(page, GlobalVariables.CharacterLimit);
             IsBusy = false;
             return items;
         }
@@ -97,5 +109,23 @@ namespace XamarinMarvelChallenge.ViewModel
             Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
             Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
         }
+
+        //private string GetOrderBy()
+        //{
+        //    if (NameOrder == 0 && DateOrder == 0)
+        //        return null;
+
+        //    string orderBy;
+
+        //    if (NameOrder == 1)
+        //    {
+        //        if (DateOrder == 1)
+        //        {
+        //            //orderBy = 
+        //        }
+        //    }
+
+        //    return orderBy;
+        //}
     }
 }
