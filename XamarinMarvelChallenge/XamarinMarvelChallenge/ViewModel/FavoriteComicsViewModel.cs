@@ -34,7 +34,7 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             var selectedCharacterComic = obj as CharacterComic;
             string resourceURI = selectedCharacterComic.ResourceURI;
-            var selectedComic = await GlobalVariables.RestApi.GetComicByCharacter(resourceURI);
+            var selectedComic = await GlobalVariables.RestApi.GetComicByCharacterAsync(resourceURI);
             var viewModel = new ComicDetailViewModel(selectedCharacterComic, selectedComic);
             ComicPage = new ComicDetail(viewModel);
 

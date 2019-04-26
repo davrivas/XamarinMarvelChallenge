@@ -10,18 +10,13 @@ namespace XamarinMarvelChallenge.Services
 {
     public class CharacterDataService
     {
-        public ObservableCollection<Character> Characters { get; set; }
+        private ObservableCollection<Character> _characters;
         public ObservableCollection<Character> SearchResults { get; set; }
 
         public CharacterDataService()
         {
-            Task.Run(() => DownloadCharactersAsync()).Wait();
-            SearchResults = Characters;
-        }
-
-        private async Task DownloadCharactersAsync()
-        {
-            Characters = await GlobalVariables.RestApi.GetCharacters();
+            _characters = GlobalVariables.Characters;
+            SearchResults = _characters;
         }
 
         public async Task<ObservableCollection<Character>> GetCharactersAsync(int pageIndex, int pageSize)
@@ -39,12 +34,12 @@ namespace XamarinMarvelChallenge.Services
 
             if (string.IsNullOrWhiteSpace(query))
             {
-                SearchResults = Characters;
+                SearchResults = _characters;
                 searchResults = SearchResults;
             }
             else
             {
-                SearchResults = Characters
+                SearchResults = _characters
                     .Where(x => x.Name.ToLower()
                     .Contains(query.ToLower()))
                     .ToObservableCollection();

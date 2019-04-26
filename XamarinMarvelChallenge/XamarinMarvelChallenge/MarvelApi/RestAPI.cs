@@ -22,7 +22,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
-        public async Task<ObservableCollection<Character>> GetCharacters()
+        public async Task<ObservableCollection<Character>> GetCharactersAsync()
         {
             ObservableCollection<Character> characters;
 
@@ -102,7 +102,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             return characters;
         }
 
-        public async Task<Comic> GetComicByCharacter(string resourceURI)
+        public async Task<Comic> GetComicByCharacterAsync(string resourceURI)
         {
             Comic comic;
 
