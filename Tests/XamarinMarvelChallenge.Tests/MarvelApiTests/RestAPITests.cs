@@ -15,7 +15,7 @@ namespace Tests.MarvelApiTests
         }
 
         [Test]
-        public async Task GetCharacters_WhenCalled_ReturnNotNull()
+        public async Task GetCharactersAsync_WhenCalled_ReturnNotNull()
         {
             var characters = await _marvelApi.GetCharactersAsync();
 
@@ -24,7 +24,7 @@ namespace Tests.MarvelApiTests
         }
 
         [Test]
-        public async Task GetCharacters_WhenCalledWithParameters_ReturnNotNull()
+        public async Task GetCharactersAsync_WhenCalledWithParameters_ReturnNotNull()
         {
             var characters = await _marvelApi.GetCharactersAsync(nameStartsWith: "spider", offset: 1, orderBy: "-name%2C-modified");
 
@@ -33,7 +33,7 @@ namespace Tests.MarvelApiTests
         }
 
         [Test]
-        public async Task GetComicByCharacter_WhenCalled_ReturnNotNull()
+        public async Task GetComicByCharacterAsync_WhenCalled_ReturnNotNull()
         {
             string resourceURI = "http://gateway.marvel.com/v1/public/comics/21366";
             var comic = await _marvelApi.GetComicByCharacterAsync(resourceURI);

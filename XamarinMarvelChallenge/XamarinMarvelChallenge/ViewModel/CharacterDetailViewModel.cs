@@ -21,10 +21,10 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             SelectedCharacter = selectedCharacter;
             Title = SelectedCharacter.Name;
-            SelectComicCommand = new Command<object>(async (vm) => await SelectComic(vm));
+            SelectComicCommand = new Command<object>(async (vm) => await SelectComicAsync(vm));
         }
 
-        private async Task SelectComic(object obj)
+        private async Task SelectComicAsync(object obj)
         {
             var selectedCharacterComic = obj as CharacterComic;
             string resourceURI = selectedCharacterComic.ResourceURI;

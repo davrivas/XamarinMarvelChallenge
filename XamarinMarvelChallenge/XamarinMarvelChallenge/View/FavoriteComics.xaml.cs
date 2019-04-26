@@ -23,7 +23,7 @@ namespace XamarinMarvelChallenge.View
 
             MessagingCenter.Subscribe<FavoriteComicsViewModel>(_viewModel,
                 _viewModel.SelectComicMessageName,
-                async (viewModel) => await HandleSelectComic(viewModel));
+                async (viewModel) => await HandleSelectComicAsync(viewModel));
         }
 
         protected override void OnDisappearing()
@@ -33,7 +33,7 @@ namespace XamarinMarvelChallenge.View
             MessagingCenter.Unsubscribe<FavoriteComicsViewModel>(_viewModel, _viewModel.SelectComicMessageName);
         }
 
-        private async Task HandleSelectComic(FavoriteComicsViewModel viewModel)
+        private async Task HandleSelectComicAsync(FavoriteComicsViewModel viewModel)
         {
             await Navigation.PushAsync(viewModel.ComicPage);
         }
