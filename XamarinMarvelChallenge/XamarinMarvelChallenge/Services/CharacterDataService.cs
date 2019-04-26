@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.Extensions;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.ViewModel;
 
@@ -15,7 +14,7 @@ namespace XamarinMarvelChallenge.Services
 
         public CharacterDataService()
         {
-            _characters = GlobalVariables.Characters;
+            //_characters = GlobalVariables.Characters;
             SearchResults = _characters;
         }
 

@@ -110,22 +110,29 @@ namespace XamarinMarvelChallenge.ViewModel
             Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
         }
 
-        //private string GetOrderBy()
-        //{
-        //    if (NameOrder == 0 && DateOrder == 0)
-        //        return null;
+        private string GetOrderBy()
+        {
+            if (NameOrder == 0 && DateOrder == 0)
+                return null;
 
-        //    string orderBy;
+            string orderBy = null;
 
-        //    if (NameOrder == 1)
-        //    {
-        //        if (DateOrder == 1)
-        //        {
-        //            //orderBy = 
-        //        }
-        //    }
+            if (NameOrder == 1)
+            {
 
-        //    return orderBy;
-        //}
+            }
+
+            if (DateOrder == 1)
+            {
+
+            }
+
+            if (NameOrder == -1)
+            {
+
+            }
+
+            return "";
+        }
     }
 }

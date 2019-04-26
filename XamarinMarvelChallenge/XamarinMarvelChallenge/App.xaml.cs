@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,15 +16,15 @@ namespace XamarinMarvelChallenge
         {
             InitializeComponent();
             GlobalVariables.RestApi = new RestApi();
-            Task.Run(() => DownloadCharactersAsync()).Wait();
+            //Task.Run(() => DownloadCharactersAsync()).Wait();
             GlobalVariables.FavoriteComics = new ObservableCollection<CharacterComic>();
             MainPage = new NavigationPage(new MainMenu());
         }
 
-        private async Task DownloadCharactersAsync()
-        {
-            GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharactersAsync();
-        }
+        //private async Task DownloadCharactersAsync()
+        //{
+        //    GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharactersAsync();
+        //}
 
         protected override void OnStart()
         {
