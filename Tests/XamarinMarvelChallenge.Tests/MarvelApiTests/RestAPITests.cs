@@ -24,6 +24,15 @@ namespace Tests.MarvelApiTests
         }
 
         [Test]
+        public async Task GetCharacters_WhenCalledWithParameters_ReturnNotNull()
+        {
+            var characters = await _marvelApi.GetCharactersAsync(nameStartsWith: "spider", offset: 1, orderBy: "-name%2C-modified");
+
+            Assert.AreNotEqual(null, characters, "Characters must not be null", null);
+            Assert.Pass();
+        }
+
+        [Test]
         public async Task GetComicByCharacter_WhenCalled_ReturnNotNull()
         {
             string resourceURI = "http://gateway.marvel.com/v1/public/comics/21366";
