@@ -8,7 +8,6 @@ using Xamarin.Forms.Extended;
 using XamarinMarvelChallenge.Extensions;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
-using XamarinMarvelChallenge.Services;
 using XamarinMarvelChallenge.View;
 
 namespace XamarinMarvelChallenge.ViewModel
@@ -16,15 +15,10 @@ namespace XamarinMarvelChallenge.ViewModel
     public class CharacterListViewModel : BaseViewModel
     {
         public string SelectCharacterMessageName => "SelectCharacter";
-        private const int _pageSize = 5;
-        private readonly CharacterDataService _dataService;
-        public const string NameSortByOption = "Name";
-        public const string DateSortByOption = "Date";
 
-        // If it is 0 is not ordered, if it is -1 is descending and 1 is ascending
-        public int NameOrder { get; set; }
-        public int DateOrder { get; set; }
-        public int? Offset { get; set; }
+        public const string NameSortByOption = "Name";
+        public const string DateSortByOption = "Modified";
+        public string SelectedSortByOption { get; set; }
 
         private string _searchText;
 
@@ -52,40 +46,23 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public CharacterListViewModel()
         {
-            _dataService = new CharacterDataService();
             Title = "Characters";
 
             Characters = new InfiniteScrollCollection<Character>
             {
                 OnLoadMore = async () => await LoadMoreCharactersAsync(),
-                OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count
+                OnCanLoadMore = () => Characters.Count <= 100 // until the end I think so
             };
             Task.Run(() => DownloadDataAsync()).Wait();
 
             SortByOptions = new string[] { NameSortByOption, DateSortByOption };
-            NameOrder = 0;
-            DateOrder = 0;
-            Offset = null;
 
-            SearchCharacterCommand = new Command(GetSearchResults);
-            SortByCommand = new Command<string>(SortBy);
+            SearchCharacterCommand = new Command(async () => await GetSearchResults());
+            SortByCommand = new Command<string>(async (sortByOption) => await SortBy(sortByOption));
             SelectCharacterCommand = new Command<object>(SelectCharacter);
         }
 
-        private async Task DownloadDataAsync()
-        {
-            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(0, GlobalVariables.CharacterLimit);
-            Characters.AddRange(items);
-        }
-
-        private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
-        {
-            IsBusy = true;
-            int page = Characters.Count / _pageSize;
-            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(page, GlobalVariables.CharacterLimit);
-            IsBusy = false;
-            return items;
-        }
+        
 
         private void SelectCharacter(object obj)
         {
@@ -96,43 +73,58 @@ namespace XamarinMarvelChallenge.ViewModel
             MessagingCenter.Send(this, SelectCharacterMessageName);
         }
 
-        private void SortBy(string sortByOption)
+        #region Character calls and filters
+        private async Task DownloadDataAsync()
         {
+            ObservableCollection<Character> items = await GlobalVariables.RestApi.GetCharactersAsync();
+            Characters.AddRange(items);
+        }
+
+        private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
+        {
+            IsBusy = true;
+            int page = Characters.Count / GlobalVariables.CharacterLimit;
+            ObservableCollection<Character> items = await GlobalVariables.RestApi.GetCharactersAsync(
+                nameStartsWith: SearchText,
+                orderBy: SelectedSortByOption,
+                offset: page);
+            IsBusy = false;
+            return items;
+        }
+
+        public async Task<ObservableCollection<Character>> GetCharactersAsync(int pageIndex, int pageSize)
+        {
+            await Task.Delay(2000);
+
+            var charactersRange = SearchResults.Skip(pageIndex * pageSize).Take(pageSize).ToObservableCollection();
+
+            return charactersRange;
+        }
+
+        private async Task SortBy(string sortByOption)
+        {
+            switch (sortByOption)
+            {
+                case NameSortByOption:
+                    SelectedSortByOption = "name";;
+                    break;
+                case DateSortByOption:
+                    SelectedSortByOption = "modified";
+                    break;
+            }
+
             Characters = _dataService.SortBy(sortByOption).ToInfiniteScrollCollection();
             Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
             Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
         }
 
-        private void GetSearchResults()
+        private async Task GetSearchResults()
         {
+            
             Characters = _dataService.GetSearchResults(SearchText).ToInfiniteScrollCollection();
             Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
             Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
         }
-
-        private string GetOrderBy()
-        {
-            if (NameOrder == 0 && DateOrder == 0)
-                return null;
-
-            string orderBy = null;
-
-            if (NameOrder == 1)
-            {
-
-            }
-
-            if (DateOrder == 1)
-            {
-
-            }
-
-            if (NameOrder == -1)
-            {
-
-            }
-
-            return "";
-        }
+        #endregion
     }
 }
