@@ -19,17 +19,17 @@ namespace XamarinMarvelChallenge.View
             BindingContext = _viewModel;
         }
 
-        protected override async void OnAppearing()
+        protected override /*async*/ void OnAppearing()
         {
             base.OnAppearing();
 
-            if (GlobalVariables.Characters == null)
-            {
-                GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
-                _viewModel.IsBusy = false;
-                _viewModel.IsNotBusy = true;
-                _viewModel.GetSearchResults();
-            }
+            //if (GlobalVariables.Characters == null)
+            //{
+            //    GlobalVariables.Characters = await GlobalVariables.RestApi.GetCharacters();
+            //    _viewModel.IsBusy = false;
+            //    _viewModel.IsNotBusy = true;
+            //    _viewModel.GetSearchResults();
+            //}
 
             MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel, 
                 _viewModel.SelectCharacterMessageName, 

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Extended;
 using XamarinMarvelChallenge.Extensions;
 using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
+using XamarinMarvelChallenge.Services;
 using XamarinMarvelChallenge.View;
 
 namespace XamarinMarvelChallenge.ViewModel
@@ -14,6 +17,8 @@ namespace XamarinMarvelChallenge.ViewModel
     public class CharacterListViewModel : BaseViewModel
     {
         public string SelectCharacterMessageName => "SelectCharacter";
+        private const int _pageSize = 5;
+        private readonly DataService _dataService;
         private const string _nameSortByOption = "Name";
         private const string _dateSortByOption = "Date";
 
@@ -49,16 +54,46 @@ namespace XamarinMarvelChallenge.ViewModel
         public bool HasCharacters => SearchResults.Count > 0;
         public bool DoesNotHaveCharacters => SearchResults.Count == 0;
 
+        private InfiniteScrollCollection<Character> _testItems;
+
+        public InfiniteScrollCollection<Character> TestItems
+        {
+            get { return _testItems; }
+            set { SetProperty(ref _testItems, value); }
+        }
+
         public CharacterListViewModel()
         {
+            _dataService = new DataService();
             Title = "Characters";
-            SearchResults = GlobalVariables.Characters ?? new ObservableCollection<Character>();
-            IsBusy = GlobalVariables.Characters == null;
-            IsNotBusy = GlobalVariables.Characters != null;
+            //SearchResults = GlobalVariables.Characters ?? new ObservableCollection<Character>();
+            //IsBusy = GlobalVariables.Characters == null;
+            //IsNotBusy = GlobalVariables.Characters != null;
+            TestItems = new InfiniteScrollCollection<Character>
+            {
+                OnLoadMore = async () => await LoadMoreCharactersAsync(),
+                OnCanLoadMore = () => TestItems.Count < 44
+            };
+            Task.Run(() => DownloadDataAsync()).Wait();
             SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
             SelectCharacterCommand = new Command<object>(SelectCharacter);
+        }
+
+        private async Task DownloadDataAsync()
+        {
+            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(0, _pageSize);
+            TestItems.AddRange(items);
+        }
+
+        private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
+        {
+            IsBusy = true;
+            int page = TestItems.Count / _pageSize;
+            ObservableCollection<Character> items = await _dataService.GetCharactersAsync(page, _pageSize);
+            IsBusy = false;
+            return items;
         }
 
         private void SelectCharacter(object obj)
