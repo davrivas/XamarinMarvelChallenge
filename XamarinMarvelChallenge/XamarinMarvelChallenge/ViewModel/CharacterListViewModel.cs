@@ -1,13 +1,11 @@
 ﻿using MvvmHelpers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Extended;
 using XamarinMarvelChallenge.Extensions;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.Services;
 using XamarinMarvelChallenge.View;
@@ -18,9 +16,9 @@ namespace XamarinMarvelChallenge.ViewModel
     {
         public string SelectCharacterMessageName => "SelectCharacter";
         private const int _pageSize = 5;
-        private readonly DataService _dataService;
-        private const string _nameSortByOption = "Name";
-        private const string _dateSortByOption = "Date";
+        private readonly CharacterDataService _dataService;
+        public const string NameSortByOption = "Name";
+        public const string DateSortByOption = "Date";
 
         private string _searchText;
 
@@ -32,17 +30,12 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public string[] SortByOptions { get; private set; }
 
-        private ICollection<Character> _searchResults;
+        private InfiniteScrollCollection<Character> __characters;
 
-        public ICollection<Character> SearchResults
+        public InfiniteScrollCollection<Character> Characters
         {
-            get { return _searchResults; }
-            set
-            {
-                SetProperty(ref _searchResults, value);
-                OnPropertyChanged(nameof(HasCharacters));
-                OnPropertyChanged(nameof(DoesNotHaveCharacters));
-            }
+            get { return __characters; }
+            set { SetProperty(ref __characters, value); }
         }
 
         public Page CharacterDetailPage { get; private set; }
@@ -51,31 +44,17 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICommand SortByCommand { get; private set; }
         public ICommand SelectCharacterCommand { get; private set; }
 
-        public bool HasCharacters => SearchResults.Count > 0;
-        public bool DoesNotHaveCharacters => SearchResults.Count == 0;
-
-        private InfiniteScrollCollection<Character> _testItems;
-
-        public InfiniteScrollCollection<Character> TestItems
-        {
-            get { return _testItems; }
-            set { SetProperty(ref _testItems, value); }
-        }
-
         public CharacterListViewModel()
         {
-            _dataService = new DataService();
+            _dataService = new CharacterDataService();
             Title = "Characters";
-            //SearchResults = GlobalVariables.Characters ?? new ObservableCollection<Character>();
-            //IsBusy = GlobalVariables.Characters == null;
-            //IsNotBusy = GlobalVariables.Characters != null;
-            TestItems = new InfiniteScrollCollection<Character>
+            Characters = new InfiniteScrollCollection<Character>
             {
                 OnLoadMore = async () => await LoadMoreCharactersAsync(),
-                OnCanLoadMore = () => TestItems.Count < 44
+                OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count
             };
             Task.Run(() => DownloadDataAsync()).Wait();
-            SortByOptions = new string[] { _nameSortByOption, _dateSortByOption };
+            SortByOptions = new string[] { NameSortByOption, DateSortByOption };
             SearchCharacterCommand = new Command(GetSearchResults);
             SortByCommand = new Command<string>(SortBy);
             SelectCharacterCommand = new Command<object>(SelectCharacter);
@@ -84,13 +63,13 @@ namespace XamarinMarvelChallenge.ViewModel
         private async Task DownloadDataAsync()
         {
             ObservableCollection<Character> items = await _dataService.GetCharactersAsync(0, _pageSize);
-            TestItems.AddRange(items);
+            Characters.AddRange(items);
         }
 
         private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
         {
             IsBusy = true;
-            int page = TestItems.Count / _pageSize;
+            int page = Characters.Count / _pageSize;
             ObservableCollection<Character> items = await _dataService.GetCharactersAsync(page, _pageSize);
             IsBusy = false;
             return items;
@@ -107,37 +86,16 @@ namespace XamarinMarvelChallenge.ViewModel
 
         private void SortBy(string sortByOption)
         {
-            IEnumerable<Character> searchResultsIEnumerable = null;
-
-            switch (sortByOption)
-            {
-                case _nameSortByOption:
-                    searchResultsIEnumerable = SearchResults
-                        .OrderBy(x => x.Name);
-                    break;
-                case _dateSortByOption:
-                    searchResultsIEnumerable = SearchResults
-                        .OrderBy(x => x.Modified);
-                    break;
-            }
-
-            var orderedResults = searchResultsIEnumerable.ToObservableCollection();
-            SearchResults = orderedResults;
+            Characters = _dataService.SortBy(sortByOption).ToInfiniteScrollCollection();
+            Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
+            Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
         }
 
-        public void GetSearchResults()
+        private void GetSearchResults()
         {
-            if (string.IsNullOrWhiteSpace(SearchText))
-                SearchResults = GlobalVariables.Characters;
-            else
-            {
-                var searchResultsIEnumerable = GlobalVariables.Characters
-                    .Where(x => x.Name.ToLower()
-                    .Contains(SearchText.ToLower()));
-                var newSearchResults = new ObservableCollection<Character>(searchResultsIEnumerable);
-
-                SearchResults = newSearchResults;
-            }
+            Characters = _dataService.GetSearchResults(SearchText).ToInfiniteScrollCollection();
+            Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
+            Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
         }
     }
 }

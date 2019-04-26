@@ -22,54 +22,8 @@
                         HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
             </StackLayout>
 
-            <!--<StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <StackLayout IsVisible="{Binding IsNotBusy}">
-                    <ListView x:Name="charactersListView" IsVisible="{Binding HasCharacters}"
-                          ItemsSource="{Binding SearchResults}" HasUnevenRows="True">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout Orientation="Horizontal" Padding="10">
-                                        <Image Source="{Binding Thumbnail}" WidthRequest="100"
-                                               Margin="0,0,10,0" VerticalOptions="Start"/>
-
-                                        <StackLayout>
-                                            <Label Text="{Binding Name}" Style="{StaticResource titleText}"/>
-                                            <Label>
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="Modified: " FontAttributes="Bold"/>
-                                                        <Span Text="{Binding Modified}" FontAttributes="Italic"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                            <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
-                                            <Label IsVisible="{Binding DoesNotHaveDescription}" 
-                                               Text="This character does not have a description"
-                                               FontAttributes="Italic"/>
-                                            <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
-                                                Command="{Binding Source={x:Reference charactersListView},
-                                                Path=BindingContext.SelectCharacterCommand}"
-                                                    HorizontalOptions="Start"/>
-                                        </StackLayout>
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    
-                    <Label IsVisible="{Binding DoesNotHaveCharacters}" Text="There are not characters matching with your search"
-                           VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
-                </StackLayout>
-
-                <StackLayout IsVisible="{Binding IsBusy}" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
-                    <Label Text="Please wait until the data is retrieved..."
-                           VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
-                </StackLayout>
-            </StackLayout>-->
-
-            <ListView x:Name="charactersListView"
-                          ItemsSource="{Binding TestItems}" CachingStrategy="RecycleElement" HasUnevenRows="True">
+            <ListView x:Name="charactersListView" ItemsSource="{Binding Characters}" 
+                      CachingStrategy="RecycleElement" HasUnevenRows="True">
                 <ListView.Behaviors>
                     <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
                 </ListView.Behaviors>
