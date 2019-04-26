@@ -27,7 +27,10 @@ namespace XamarinMarvelChallenge.MarvelApi
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
-        public async Task<ObservableCollection<Character>> GetCharactersAsync(string nameStartsWith = null, string orderBy = null, int? offset = null)
+        public async Task<ObservableCollection<Character>> GetCharactersAsync(
+            string nameStartsWith = null, 
+            string orderBy = null, 
+            int? offset = null)
         {
             ObservableCollection<Character> characters;
 
@@ -35,16 +38,20 @@ namespace XamarinMarvelChallenge.MarvelApi
             SetupRequestMD5Hash();
             string requestUrl = baseUrl + "?";
 
-            if (nameStartsWith != null)
+            if (!string.IsNullOrWhiteSpace(nameStartsWith))
                 requestUrl += "nameStartsWith=" + nameStartsWith + "&";
 
-            if (orderBy != null)
+            if (!string.IsNullOrWhiteSpace(orderBy))
                 requestUrl += "orderBy=" + orderBy + "&";
-            
-            requestUrl += "limit=" + GlobalVariables.CharacterLimit.ToString()
-                + "&apikey=" + _publicKey
-                + "&ts=" + _ts
-                + "&hash=" + _md5Hash;
+
+            requestUrl += "limit=" + GlobalVariables.CharacterLimit.ToString() + "&";
+
+            if (offset != null)
+                requestUrl += "offset=" + offset + "&";
+
+            requestUrl += "apikey=" + _publicKey + "&"
+                + "ts=" + _ts + "&"
+                + "hash=" + _md5Hash;
 
             HttpResponseMessage response;
 
