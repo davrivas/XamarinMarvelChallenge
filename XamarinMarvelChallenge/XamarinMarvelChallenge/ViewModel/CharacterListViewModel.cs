@@ -63,14 +63,13 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public CharacterListViewModel()
         {
+            Task.Run(() => DownloadDataAsync()).Wait();
+
             Title = "Characters";
 
             SearchText = null;
             SelectedSortByOption = null;
             _offset = null;
-
-            Characters = new InfiniteScrollCollection<Character>();
-            Task.Run(() => DownloadDataAsync()).Wait();
 
             SortByOptions = new string[] { NameSortByOption, DateSortByOption };
 
@@ -100,6 +99,7 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             _limit = App.CharacterLimit;
             ObservableCollection<Character> items = await GetCharactersAsync();
+            Characters = new InfiniteScrollCollection<Character>();
             SetupInfiniteScrollCollection();
             Characters.AddRange(items);
         }
@@ -107,7 +107,7 @@ namespace XamarinMarvelChallenge.ViewModel
         private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
         {
             IsBusy = true;
-            _offset = Characters.Count / App.CharacterLimit;
+            _offset = (Characters.Count / _limit) * _limit;
             ObservableCollection<Character> items = await GetCharactersAsync();
             IsBusy = false;
             return items;
