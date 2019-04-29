@@ -1,12 +1,12 @@
 ﻿using MvvmHelpers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Extended;
 using XamarinMarvelChallenge.Extensions;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.View;
 
@@ -14,21 +14,38 @@ namespace XamarinMarvelChallenge.ViewModel
 {
     public class CharacterListViewModel : BaseViewModel
     {
+        /// <summary>
+        /// This is used to handle MessagingCenter methods
+        /// </summary>
         public string SelectCharacterMessageName => "SelectCharacter";
-
-        public const string NameSortByOption = "Name";
-        public const string DateSortByOption = "Modified";
-        public string SelectedSortByOption { get; set; }
 
         private string _searchText;
 
+        /// <summary>
+        /// It is the 'nameStartsWith' parameter (it can be null or empty)
+        /// </summary>
         public string SearchText
         {
             get { return _searchText; }
             set { SetProperty(ref _searchText, value); }
         }
 
+        public const string NameSortByOption = "Name";
+        public const string DateSortByOption = "Modified";
         public string[] SortByOptions { get; private set; }
+        /// <summary>
+        /// It is the 'orderBy' parameter (it can be null or empty)
+        /// </summary>
+        public string SelectedSortByOption { get; set; }
+
+        /// <summary>
+        /// This is the 'limit' parameter (it must not be null)
+        /// </summary>
+        private int _limit;
+        /// <summary>
+        /// This is the offset parameter (it can be null)
+        /// </summary>
+        private int? _offset;
 
         private InfiniteScrollCollection<Character> __characters;
 
@@ -48,11 +65,11 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             Title = "Characters";
 
-            Characters = new InfiniteScrollCollection<Character>
-            {
-                OnLoadMore = async () => await LoadMoreCharactersAsync(),
-                OnCanLoadMore = () => Characters.Count <= 100 // until the end I think so
-            };
+            SearchText = null;
+            SelectedSortByOption = null;
+            _offset = null;
+
+            Characters = new InfiniteScrollCollection<Character>();
             Task.Run(() => DownloadDataAsync()).Wait();
 
             SortByOptions = new string[] { NameSortByOption, DateSortByOption };
@@ -61,8 +78,6 @@ namespace XamarinMarvelChallenge.ViewModel
             SortByCommand = new Command<string>(async (sortByOption) => await SortBy(sortByOption));
             SelectCharacterCommand = new Command<object>(SelectCharacter);
         }
-
-        
 
         private void SelectCharacter(object obj)
         {
@@ -74,29 +89,36 @@ namespace XamarinMarvelChallenge.ViewModel
         }
 
         #region Character calls and filters
+        private async Task<ObservableCollection<Character>> GetCharactersAsync()
+        {
+            var characters = await App.RestApiObject.GetCharactersAsync(_limit, SearchText, SelectedSortByOption, _offset);
+
+            return characters;
+        }
+
         private async Task DownloadDataAsync()
         {
-            ObservableCollection<Character> items = await GlobalVariables.RestApi.GetCharactersAsync();
+            _limit = App.CharacterLimit;
+            ObservableCollection<Character> items = await GetCharactersAsync();
+            SetupInfiniteScrollCollection();
             Characters.AddRange(items);
         }
 
         private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
         {
             IsBusy = true;
-            int page = Characters.Count / GlobalVariables.CharacterLimit;
-            ObservableCollection<Character> items = await GlobalVariables.RestApi.GetCharactersAsync(
-                nameStartsWith: SearchText,
-                orderBy: SelectedSortByOption,
-                offset: page);
+            _offset = Characters.Count / App.CharacterLimit;
+            ObservableCollection<Character> items = await GetCharactersAsync();
             IsBusy = false;
             return items;
         }
 
-        public async Task<ObservableCollection<Character>> GetCharactersAsync(int pageIndex, int pageSize)
+        public async Task<ObservableCollection<Character>> GetCharactersByRangeAsync(int pageIndex, int pageSize)
         {
             await Task.Delay(2000);
 
-            var charactersRange = SearchResults.Skip(pageIndex * pageSize).Take(pageSize).ToObservableCollection();
+            var characters = await GetCharactersAsync();
+            var charactersRange = characters.Skip(pageIndex * pageSize).Take(pageSize).ToObservableCollection();
 
             return charactersRange;
         }
@@ -106,24 +128,34 @@ namespace XamarinMarvelChallenge.ViewModel
             switch (sortByOption)
             {
                 case NameSortByOption:
-                    SelectedSortByOption = "name";;
+                    SelectedSortByOption = "name";
                     break;
                 case DateSortByOption:
                     SelectedSortByOption = "modified";
                     break;
             }
 
-            Characters = _dataService.SortBy(sortByOption).ToInfiniteScrollCollection();
-            Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
-            Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
+            _limit = Characters.Count;
+            _offset = 0;
+            var characters = await GetCharactersAsync();
+            Characters = characters.ToInfiniteScrollCollection();
+            SetupInfiniteScrollCollection();
+
         }
 
         private async Task GetSearchResults()
         {
-            
-            Characters = _dataService.GetSearchResults(SearchText).ToInfiniteScrollCollection();
+            _limit = App.CharacterLimit;
+            _offset = 0;
+            var characters = await GetCharactersAsync();
+            Characters = characters.ToInfiniteScrollCollection();
+            SetupInfiniteScrollCollection();
+        }
+
+        private void SetupInfiniteScrollCollection()
+        {
             Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
-            Characters.OnCanLoadMore = () => Characters.Count <= _dataService.SearchResults.Count;
+            Characters.OnCanLoadMore = () => Characters.Count <= App.MaxCharacters;
         }
         #endregion
     }
