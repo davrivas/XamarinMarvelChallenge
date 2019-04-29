@@ -1,6 +1,4 @@
-﻿using XamarinMarvelChallenge.Globals;
-
-namespace XamarinMarvelChallenge.Model
+﻿namespace XamarinMarvelChallenge.Model
 {
     public class Comic
     {

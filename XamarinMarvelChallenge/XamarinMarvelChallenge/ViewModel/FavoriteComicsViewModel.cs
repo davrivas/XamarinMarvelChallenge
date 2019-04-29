@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 using XamarinMarvelChallenge.View;
 
@@ -13,7 +12,7 @@ namespace XamarinMarvelChallenge.ViewModel
     {
         public string SelectComicMessageName => "SelectComic";
 
-        public ICollection<CharacterComic> FavoriteComics => GlobalVariables.FavoriteComics;
+        public ICollection<CharacterComic> FavoriteComics => App.FavoriteComics;
 
         public ICommand SelectComicCommand { get; private set; }
         public ICommand RemoveFromFavoritesCommand { get; private set; }
@@ -34,7 +33,7 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             var selectedCharacterComic = obj as CharacterComic;
             string resourceURI = selectedCharacterComic.ResourceURI;
-            var selectedComic = await GlobalVariables.RestApi.GetComicByCharacterAsync(resourceURI);
+            var selectedComic = await App.RestApiObject.GetComicByCharacterAsync(resourceURI);
             var viewModel = new ComicDetailViewModel(selectedCharacterComic, selectedComic);
             ComicPage = new ComicDetail(viewModel);
 
@@ -44,7 +43,7 @@ namespace XamarinMarvelChallenge.ViewModel
         private void RemoveFromFavorites(object obj)
         {
             var selectedComic = obj as CharacterComic;
-            GlobalVariables.FavoriteComics.Remove(selectedComic);
+            App.FavoriteComics.Remove(selectedComic);
             UpdateProperties();
         }
 
@@ -60,8 +59,8 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             string title = "Favorite comics";
 
-            if (GlobalVariables.FavoriteComics.Count > 0)
-                title += " (" + GlobalVariables.FavoriteComics.Count + ")";
+            if (App.FavoriteComics.Count > 0)
+                title += " (" + App.FavoriteComics.Count + ")";
 
             return title;
         }

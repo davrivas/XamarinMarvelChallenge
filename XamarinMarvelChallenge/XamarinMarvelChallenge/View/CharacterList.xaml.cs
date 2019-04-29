@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.ViewModel;
 
 namespace XamarinMarvelChallenge.View
@@ -23,8 +22,8 @@ namespace XamarinMarvelChallenge.View
         {
             base.OnAppearing();
 
-            MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel, 
-                _viewModel.SelectCharacterMessageName, 
+            MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel,
+                _viewModel.SelectCharacterMessageName,
                 async (viewModel) => await HandleSelectCharacterAsync(viewModel));
         }
 

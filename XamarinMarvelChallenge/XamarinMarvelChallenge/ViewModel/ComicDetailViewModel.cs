@@ -1,7 +1,6 @@
 ﻿using MvvmHelpers;
 using System.Windows.Input;
 using Xamarin.Forms;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 
 namespace XamarinMarvelChallenge.ViewModel
@@ -13,7 +12,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public ICommand FavoriteCommand { get; private set; }
 
-        public bool IsFavorite => GlobalVariables.FavoriteComics.Contains(SelectedCharacterComic);
+        public bool IsFavorite => App.FavoriteComics.Contains(SelectedCharacterComic);
         public string FavoriteIcon => IsFavorite ? "btn_favourites_primary.png" : "btn_favourites_default.png";
         public string FavoriteTitle => IsFavorite ? "ADDED TO FAVORITES" : "ADD TO FAVORITES";
         public Color FavoriteTitleColor => IsFavorite ? Color.FromRgb(237, 29, 36) : Color.FromRgb(61, 51, 51);
@@ -30,9 +29,9 @@ namespace XamarinMarvelChallenge.ViewModel
         private void FavoriteMethod()
         {
             if (IsFavorite)
-                GlobalVariables.FavoriteComics.Remove(SelectedCharacterComic);
+                App.FavoriteComics.Remove(SelectedCharacterComic);
             else
-                GlobalVariables.FavoriteComics.Add(SelectedCharacterComic);
+                App.FavoriteComics.Add(SelectedCharacterComic);
 
             UpdateProperties();
         }
