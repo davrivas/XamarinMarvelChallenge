@@ -18,9 +18,14 @@ namespace XamarinMarvelChallenge.View
             BindingContext = _viewModel;
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
+
+            if (_viewModel.Characters == null)
+            {
+                await _viewModel.InitializeDataAsync();
+            }
 
             MessagingCenter.Subscribe<CharacterListViewModel>(_viewModel,
                 _viewModel.SelectCharacterMessageName,

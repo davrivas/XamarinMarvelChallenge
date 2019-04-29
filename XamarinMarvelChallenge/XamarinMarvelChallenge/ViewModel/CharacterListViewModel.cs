@@ -27,12 +27,23 @@ namespace XamarinMarvelChallenge.ViewModel
         public string SearchText
         {
             get { return _searchText; }
-            set { SetProperty(ref _searchText, value); }
+            set
+            {
+                SetProperty(ref _searchText, value);
+                
+            }
         }
 
-        public const string NameSortByOption = "Name";
-        public const string DateSortByOption = "Modified";
-        public string[] SortByOptions { get; private set; }
+        public string NameSortByOption => _isNameOrderAsc ? "Name (asc)" : "Name (desc)";
+        public string DateSortByOption => _isDateOrderAsc ? "Date (asc)" : "Date (desc)";
+
+        private ObservableCollection<string> _sortByOptions;
+
+        public ObservableCollection<string> SortByOptions
+        {
+            get { return _sortByOptions; }
+            set { SetProperty(ref _sortByOptions, value); }
+        }
         /// <summary>
         /// It is the 'orderBy' parameter (it can be null or empty)
         /// </summary>
@@ -61,23 +72,49 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICommand SortByCommand { get; private set; }
         public ICommand SelectCharacterCommand { get; private set; }
 
+        private bool _hasLoadedPage;
+
+        public bool HasLoadedPage
+        {
+            get { return _hasLoadedPage; }
+            set { SetProperty(ref _hasLoadedPage, value); }
+        }
+
+
+        private bool _hasNotLoadedPage;
+
+        public bool HasNotLoadedPage
+        {
+            get { return _hasNotLoadedPage; }
+            private set { SetProperty(ref _hasNotLoadedPage, value); }
+        }
+
+        public bool HasCharacters => Characters.Count > 0;
+        public bool DoesNotHaveCharacters => Characters.Count == 0;
+        private bool _isNameOrderAsc;
+        private bool _isDateOrderAsc;
+
         public CharacterListViewModel()
         {
-            Task.Run(() => DownloadDataAsync()).Wait();
-
             Title = "Characters";
 
             SearchText = null;
             SelectedSortByOption = null;
             _offset = null;
 
-            SortByOptions = new string[] { NameSortByOption, DateSortByOption };
+            _isNameOrderAsc = true;
+            _isDateOrderAsc = true;
+            SortByOptions = new ObservableCollection<string> { NameSortByOption, DateSortByOption };
 
             SearchCharacterCommand = new Command(async () => await GetSearchResults());
             SortByCommand = new Command<string>(async (sortByOption) => await SortBy(sortByOption));
             SelectCharacterCommand = new Command<object>(SelectCharacter);
         }
 
+        /// <summary>
+        /// This will handle the selection of a character
+        /// </summary>
+        /// <param name="obj">The selected character in the UI</param>
         private void SelectCharacter(object obj)
         {
             var selectedCharacter = obj as Character;
@@ -95,17 +132,32 @@ namespace XamarinMarvelChallenge.ViewModel
             return characters;
         }
 
-        private async Task DownloadDataAsync()
+        /// <summary>
+        /// This will be called once in order the initialize the data when the page is built
+        /// </summary>
+        /// <returns>The task that queries the api</returns>
+        public async Task InitializeDataAsync()
         {
+            HasLoadedPage = false;
+            HasNotLoadedPage = true;
             _limit = App.CharacterLimit;
             ObservableCollection<Character> items = await GetCharactersAsync();
             Characters = new InfiniteScrollCollection<Character>();
             SetupInfiniteScrollCollection();
             Characters.AddRange(items);
+            HasLoadedPage = true;
+            HasNotLoadedPage = false;
         }
 
-        private async Task<IEnumerable<Character>> LoadMoreCharactersAsync()
+        /// <summary>
+        /// This loads the following results
+        /// </summary>
+        /// <returns>The task that queries the api</returns>
+        private async Task<ObservableCollection<Character>> LoadMoreCharactersAsync()
         {
+            if (_limit != App.CharacterLimit)
+                _limit = App.CharacterLimit;
+
             IsBusy = true;
             _offset = (Characters.Count / _limit) * _limit;
             ObservableCollection<Character> items = await GetCharactersAsync();
@@ -113,49 +165,108 @@ namespace XamarinMarvelChallenge.ViewModel
             return items;
         }
 
-        public async Task<ObservableCollection<Character>> GetCharactersByRangeAsync(int pageIndex, int pageSize)
-        {
-            await Task.Delay(2000);
-
-            var characters = await GetCharactersAsync();
-            var charactersRange = characters.Skip(pageIndex * pageSize).Take(pageSize).ToObservableCollection();
-
-            return charactersRange;
-        }
-
+        /// <summary>
+        /// This sorts the data by name or date modified
+        /// </summary>
+        /// <param name="sortByOption">This is the sorting option. It only can be by name or by date modified</param>
+        /// <returns>The task that queries the api</returns>
         private async Task SortBy(string sortByOption)
         {
             switch (sortByOption)
             {
-                case NameSortByOption:
-                    SelectedSortByOption = "name";
+                case "Name (asc)":
+                case "Name (desc)":
+                    if (!_isDateOrderAsc)
+                    {
+                        _isDateOrderAsc = true;
+                        OnPropertyChanged(nameof(DateSortByOption));
+                    }
+                        
+
+                    if (_isNameOrderAsc)
+                    {
+                        SelectedSortByOption = "name";
+                        _isNameOrderAsc = false;
+                    }
+                    else
+                    {
+                        SelectedSortByOption = "-name";
+                        _isNameOrderAsc = true;
+                    }
+
+                    OnPropertyChanged(nameof(NameSortByOption));
                     break;
-                case DateSortByOption:
-                    SelectedSortByOption = "modified";
+                case "Date (asc)":
+                case "Date (desc)":
+                    if (!_isNameOrderAsc)
+                    {
+                        _isNameOrderAsc = true;
+                        OnPropertyChanged(nameof(NameSortByOption));
+                    }
+                    
+                    if (_isDateOrderAsc)
+                    {
+                        SelectedSortByOption = "modified";
+                        _isDateOrderAsc = false;
+                    }
+                    else
+                    {
+                        SelectedSortByOption = "-modified";
+                        _isDateOrderAsc = true;
+                    }
+
+                    OnPropertyChanged(nameof(DateSortByOption));
                     break;
             }
 
-            _limit = Characters.Count;
-            _offset = 0;
+            OnPropertyChanged(nameof(SortByOptions));
+
+            if (_limit != Characters.Count)
+                _limit = Characters.Count;
+
+            if (_offset == null)
+                _offset = (Characters.Count / _limit) * _limit;            
+
+            HasLoadedPage = false;
+            HasNotLoadedPage = true;
+
             var characters = await GetCharactersAsync();
             Characters = characters.ToInfiniteScrollCollection();
             SetupInfiniteScrollCollection();
 
+            HasLoadedPage = true;
+            HasNotLoadedPage = false;
+
         }
 
+        /// <summary>
+        /// This will search by 'nameStartsWith' parameter
+        /// </summary>
+        /// <returns>The task that queries the api</returns>
         private async Task GetSearchResults()
         {
-            _limit = App.CharacterLimit;
-            _offset = 0;
+            _offset = null;
+
+            HasLoadedPage = false;
+            HasNotLoadedPage = true;
+
             var characters = await GetCharactersAsync();
             Characters = characters.ToInfiniteScrollCollection();
             SetupInfiniteScrollCollection();
+
+            HasLoadedPage = true;
+            HasNotLoadedPage = false;
         }
 
+        /// <summary>
+        /// This will set the OnLoadMore and OnCanLoadMore
+        /// </summary>
         private void SetupInfiniteScrollCollection()
         {
             Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
             Characters.OnCanLoadMore = () => Characters.Count <= App.MaxCharacters;
+            OnPropertyChanged(nameof(HasCharacters));
+            OnPropertyChanged(nameof(DoesNotHaveCharacters));
         }
         #endregion
     }
