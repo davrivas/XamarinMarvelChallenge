@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using XamarinMarvelChallenge.Extensions;
-using XamarinMarvelChallenge.Globals;
 using XamarinMarvelChallenge.Model;
 
 namespace XamarinMarvelChallenge.MarvelApi
@@ -27,10 +26,7 @@ namespace XamarinMarvelChallenge.MarvelApi
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
         }
 
-        public async Task<ObservableCollection<Character>> GetCharactersAsync(
-            string nameStartsWith = null, 
-            string orderBy = null, 
-            int? offset = null)
+        public async Task<ObservableCollection<Character>> GetCharactersAsync(int limit, string nameStartsWith = null, string orderBy = null, int? offset = null)
         {
             ObservableCollection<Character> characters;
 
@@ -44,10 +40,10 @@ namespace XamarinMarvelChallenge.MarvelApi
             if (!string.IsNullOrWhiteSpace(orderBy))
                 requestUrl += "orderBy=" + orderBy + "&";
 
-            requestUrl += "limit=" + GlobalVariables.CharacterLimit.ToString() + "&";
+            requestUrl += "limit=" + limit.ToString() + "&";
 
             if (offset != null)
-                requestUrl += "offset=" + offset + "&";
+                requestUrl += "offset=" + offset.ToString() + "&";
 
             requestUrl += "apikey=" + _publicKey + "&"
                 + "ts=" + _ts + "&"
@@ -69,6 +65,13 @@ namespace XamarinMarvelChallenge.MarvelApi
 
                 var successfulResponse = JObject.Parse(jsonString);
                 var data = (JObject)successfulResponse["data"];
+
+                if (App.MaxCharacters == null)
+                {
+                    int total = (int)data["total"];
+                    App.MaxCharacters = total;
+                }
+
                 var results = (JArray)data["results"];
 
                 characters = new ObservableCollection<Character>();
