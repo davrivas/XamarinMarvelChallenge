@@ -23,60 +23,62 @@
             </StackLayout>
 
             <StackLayout>
-                <Label IsVisible="{Binding HasNotLoadedPage}" Text="Please wait until the data is loaded"
-                       HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+                <Label IsVisible="{Binding HasNotLoadedPage}" Text="{Binding LoadingMessage}"
+                       HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
 
                 <StackLayout IsVisible="{Binding HasLoadedPage}">
-                    
-                </StackLayout>
-
-                <ListView IsVisible="{Binding HasLoadedPage}" x:Name="charactersListView" HasUnevenRows="True"
-                          ItemsSource="{Binding Characters}" CachingStrategy="RecycleElement" >
-                    <ListView.Behaviors>
-                        <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
-                    </ListView.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal" Padding="10">
-                                    <Image Source="{Binding Thumbnail}" WidthRequest="100"
+                    <Label IsVisible="{Binding DoesNotHaveCharacters}" Text="There are not results"
+                       HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    <ListView x:Name="charactersListView" IsVisible="{Binding HasCharacters}"
+                              HasUnevenRows="True" ItemsSource="{Binding Characters}" 
+                              CachingStrategy="RecycleElement" 
+                              IsPullToRefreshEnabled="True">
+                        <ListView.Behaviors>
+                            <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
+                        </ListView.Behaviors>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="10">
+                                        <Image Source="{Binding Thumbnail}" WidthRequest="100"
                                                Margin="0,0,10,0" VerticalOptions="Start"/>
 
-                                    <StackLayout>
-                                        <Label Text="{Binding Name}" Style="{StaticResource titleText}"/>
-                                        <Label>
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="Modified: " FontAttributes="Bold"/>
-                                                    <Span Text="{Binding Modified}" FontAttributes="Italic"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
-                                        <Label IsVisible="{Binding DoesNotHaveDescription}" 
+                                        <StackLayout>
+                                            <Label Text="{Binding Name}" Style="{StaticResource titleText}"/>
+                                            <Label>
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Modified: " FontAttributes="Bold"/>
+                                                        <Span Text="{Binding Modified}" FontAttributes="Italic"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label IsVisible="{Binding HasDescription}" Text="{Binding Description}"/>
+                                            <Label IsVisible="{Binding DoesNotHaveDescription}" 
                                                Text="This character does not have a description"
                                                FontAttributes="Italic"/>
-                                        <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
+                                            <Button Style="{StaticResource redButton}" Text="View more" CommandParameter="{Binding .}"
                                                 Command="{Binding Source={x:Reference charactersListView},
                                                 Path=BindingContext.SelectCharacterCommand}"
                                                     HorizontalOptions="Start"/>
+                                        </StackLayout>
                                     </StackLayout>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.Footer>
-                        <Grid Padding="5" IsVisible="{Binding IsBusy}">
-                            <Grid.Triggers>
-                                <Trigger TargetType="Grid" Property="IsVisible" Value="False">
-                                    <Setter Property="HeightRequest" Value="0" />
-                                </Trigger>
-                            </Grid.Triggers>
-                            <Label Text="Loading more characters..." Style="{StaticResource titleText}"
-                               VerticalOptions="Center" HorizontalOptions="Center"/>
-                        </Grid>
-                    </ListView.Footer>
-                </ListView>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Grid Padding="5" IsVisible="{Binding IsBusy}">
+                                <Grid.Triggers>
+                                    <Trigger TargetType="Grid" Property="IsVisible" Value="False">
+                                        <Setter Property="HeightRequest" Value="0" />
+                                    </Trigger>
+                                </Grid.Triggers>
+                                <Label Text="Loading more characters..." Style="{StaticResource titleText}"
+                                       VerticalOptions="Center" HorizontalOptions="Center"/>
+                            </Grid>
+                        </ListView.Footer>
+                    </ListView>
+                </StackLayout>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

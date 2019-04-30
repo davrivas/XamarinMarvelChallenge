@@ -1,7 +1,5 @@
 ﻿using MvvmHelpers;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -27,39 +25,51 @@ namespace XamarinMarvelChallenge.ViewModel
         public string SearchText
         {
             get { return _searchText; }
-            set
-            {
-                SetProperty(ref _searchText, value);
-                
-            }
+            set { SetProperty(ref _searchText, value); }
         }
 
-        public string NameSortByOption => _isNameOrderAsc ? "Name (asc)" : "Name (desc)";
-        public string DateSortByOption => _isDateOrderAsc ? "Date (asc)" : "Date (desc)";
+        private const string _nameOption = "Name";
+        private const string _dateOption = "Date";
 
-        private ObservableCollection<string> _sortByOptions;
+        public string[] SortByOptions { get; set; }
 
-        public ObservableCollection<string> SortByOptions
-        {
-            get { return _sortByOptions; }
-            set { SetProperty(ref _sortByOptions, value); }
-        }
+        private string _selectedSortByOption;
+
         /// <summary>
         /// It is the 'orderBy' parameter (it can be null or empty)
         /// </summary>
-        public string SelectedSortByOption { get; set; }
+        public string SelectedSortByOption
+        {
+            get { return _selectedSortByOption; }
+            set { SetProperty(ref _selectedSortByOption, value); }
+        }
+
+        private string _loadingMessage;
+
+        /// <summary>
+        /// This shows the corresponding message depending on the action performed
+        /// </summary>
+        public string LoadingMessage
+        {
+            get { return _loadingMessage; }
+            set { SetProperty(ref _loadingMessage, value); }
+        }
+
 
         /// <summary>
         /// This is the 'limit' parameter (it must not be null)
         /// </summary>
         private int _limit;
         /// <summary>
-        /// This is the offset parameter (it can be null)
+        /// This is the 'offset' parameter (it can be null)
         /// </summary>
         private int? _offset;
 
         private InfiniteScrollCollection<Character> __characters;
 
+        /// <summary>
+        /// The infinite scroll collection of characters
+        /// </summary>
         public InfiniteScrollCollection<Character> Characters
         {
             get { return __characters; }
@@ -74,12 +84,14 @@ namespace XamarinMarvelChallenge.ViewModel
 
         private bool _hasLoadedPage;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool HasLoadedPage
         {
             get { return _hasLoadedPage; }
             set { SetProperty(ref _hasLoadedPage, value); }
         }
-
 
         private bool _hasNotLoadedPage;
 
@@ -91,8 +103,6 @@ namespace XamarinMarvelChallenge.ViewModel
 
         public bool HasCharacters => Characters.Count > 0;
         public bool DoesNotHaveCharacters => Characters.Count == 0;
-        private bool _isNameOrderAsc;
-        private bool _isDateOrderAsc;
 
         public CharacterListViewModel()
         {
@@ -102,9 +112,7 @@ namespace XamarinMarvelChallenge.ViewModel
             SelectedSortByOption = null;
             _offset = null;
 
-            _isNameOrderAsc = true;
-            _isDateOrderAsc = true;
-            SortByOptions = new ObservableCollection<string> { NameSortByOption, DateSortByOption };
+            SortByOptions = new string[] { _nameOption, _dateOption };
 
             SearchCharacterCommand = new Command(async () => await GetSearchResults());
             SortByCommand = new Command<string>(async (sortByOption) => await SortBy(sortByOption));
@@ -140,11 +148,14 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             HasLoadedPage = false;
             HasNotLoadedPage = true;
+            LoadingMessage = "Please wait until the data is retrieved";
+
             _limit = App.CharacterLimit;
             ObservableCollection<Character> items = await GetCharactersAsync();
             Characters = new InfiniteScrollCollection<Character>();
             SetupInfiniteScrollCollection();
             Characters.AddRange(items);
+
             HasLoadedPage = true;
             HasNotLoadedPage = false;
         }
@@ -174,61 +185,23 @@ namespace XamarinMarvelChallenge.ViewModel
         {
             switch (sortByOption)
             {
-                case "Name (asc)":
-                case "Name (desc)":
-                    if (!_isDateOrderAsc)
-                    {
-                        _isDateOrderAsc = true;
-                        OnPropertyChanged(nameof(DateSortByOption));
-                    }
-                        
-
-                    if (_isNameOrderAsc)
-                    {
-                        SelectedSortByOption = "name";
-                        _isNameOrderAsc = false;
-                    }
-                    else
-                    {
-                        SelectedSortByOption = "-name";
-                        _isNameOrderAsc = true;
-                    }
-
-                    OnPropertyChanged(nameof(NameSortByOption));
+                case _nameOption:
+                    SelectedSortByOption = "name";
                     break;
-                case "Date (asc)":
-                case "Date (desc)":
-                    if (!_isNameOrderAsc)
-                    {
-                        _isNameOrderAsc = true;
-                        OnPropertyChanged(nameof(NameSortByOption));
-                    }
-                    
-                    if (_isDateOrderAsc)
-                    {
-                        SelectedSortByOption = "modified";
-                        _isDateOrderAsc = false;
-                    }
-                    else
-                    {
-                        SelectedSortByOption = "-modified";
-                        _isDateOrderAsc = true;
-                    }
-
-                    OnPropertyChanged(nameof(DateSortByOption));
+                case _dateOption:
+                    SelectedSortByOption = "modified";
                     break;
             }
-
-            OnPropertyChanged(nameof(SortByOptions));
 
             if (_limit != Characters.Count)
                 _limit = Characters.Count;
 
             if (_offset == null)
-                _offset = (Characters.Count / _limit) * _limit;            
+                _offset = (Characters.Count / _limit) * _limit;
 
             HasLoadedPage = false;
             HasNotLoadedPage = true;
+            LoadingMessage = "Please wait until the data is reordered";
 
             var characters = await GetCharactersAsync();
             Characters = characters.ToInfiniteScrollCollection();
@@ -249,6 +222,7 @@ namespace XamarinMarvelChallenge.ViewModel
 
             HasLoadedPage = false;
             HasNotLoadedPage = true;
+            LoadingMessage = "Please wait until the data is retrieved";
 
             var characters = await GetCharactersAsync();
             Characters = characters.ToInfiniteScrollCollection();
