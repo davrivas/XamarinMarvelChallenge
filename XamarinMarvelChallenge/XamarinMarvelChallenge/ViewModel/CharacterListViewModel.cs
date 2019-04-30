@@ -1,4 +1,5 @@
 ﻿using MvvmHelpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -31,7 +32,7 @@ namespace XamarinMarvelChallenge.ViewModel
         private const string _nameOption = "Name";
         private const string _dateOption = "Date";
 
-        public string[] SortByOptions { get; set; }
+        public string[] SortByOptions { get; private set; }
 
         private string _selectedSortByOption;
 
@@ -82,11 +83,9 @@ namespace XamarinMarvelChallenge.ViewModel
         public ICommand SortByCommand { get; private set; }
         public ICommand SelectCharacterCommand { get; private set; }
 
+        #region Flags
         private bool _hasLoadedPage;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool HasLoadedPage
         {
             get { return _hasLoadedPage; }
@@ -101,8 +100,22 @@ namespace XamarinMarvelChallenge.ViewModel
             private set { SetProperty(ref _hasNotLoadedPage, value); }
         }
 
-        public bool HasCharacters => Characters.Count > 0;
-        public bool DoesNotHaveCharacters => Characters.Count == 0;
+        private bool _hasCharacters;
+
+        public bool HasCharacters
+        {
+            get { return _hasCharacters; }
+            set { SetProperty(ref _hasCharacters, value); }
+        }
+
+        private bool _doesNotHaveCharacters;
+
+        public bool DoesNotHaveCharacters
+        {
+            get { return _doesNotHaveCharacters; }
+            set { SetProperty(ref _doesNotHaveCharacters, value); }
+        }
+        #endregion
 
         public CharacterListViewModel()
         {
@@ -111,6 +124,15 @@ namespace XamarinMarvelChallenge.ViewModel
             SearchText = null;
             SelectedSortByOption = null;
             _offset = null;
+
+            HasLoadedPage = false;
+            HasNotLoadedPage = true;
+            LoadingMessage = "Please wait until the data is retrieved";
+
+            _limit = App.CharacterLimit;
+
+            HasCharacters = false;
+            DoesNotHaveCharacters = false;
 
             SortByOptions = new string[] { _nameOption, _dateOption };
 
@@ -146,22 +168,14 @@ namespace XamarinMarvelChallenge.ViewModel
         /// <returns>The task that queries the api</returns>
         public async Task InitializeDataAsync()
         {
-            HasLoadedPage = false;
-            HasNotLoadedPage = true;
-            LoadingMessage = "Please wait until the data is retrieved";
-
-            _limit = App.CharacterLimit;
-            ObservableCollection<Character> items = await GetCharactersAsync();
-            Characters = new InfiniteScrollCollection<Character>();
-            SetupInfiniteScrollCollection();
-            Characters.AddRange(items);
+            await SetupInfiniteScrollCollection();
 
             HasLoadedPage = true;
             HasNotLoadedPage = false;
         }
 
         /// <summary>
-        /// This loads the following results
+        /// This loads the following results of the infinite scroll collection
         /// </summary>
         /// <returns>The task that queries the api</returns>
         private async Task<ObservableCollection<Character>> LoadMoreCharactersAsync()
@@ -203,9 +217,7 @@ namespace XamarinMarvelChallenge.ViewModel
             HasNotLoadedPage = true;
             LoadingMessage = "Please wait until the data is reordered";
 
-            var characters = await GetCharactersAsync();
-            Characters = characters.ToInfiniteScrollCollection();
-            SetupInfiniteScrollCollection();
+            await SetupInfiniteScrollCollection();
 
             HasLoadedPage = true;
             HasNotLoadedPage = false;
@@ -224,9 +236,7 @@ namespace XamarinMarvelChallenge.ViewModel
             HasNotLoadedPage = true;
             LoadingMessage = "Please wait until the data is retrieved";
 
-            var characters = await GetCharactersAsync();
-            Characters = characters.ToInfiniteScrollCollection();
-            SetupInfiniteScrollCollection();
+            await SetupInfiniteScrollCollection();
 
             HasLoadedPage = true;
             HasNotLoadedPage = false;
@@ -235,12 +245,14 @@ namespace XamarinMarvelChallenge.ViewModel
         /// <summary>
         /// This will set the OnLoadMore and OnCanLoadMore
         /// </summary>
-        private void SetupInfiniteScrollCollection()
+        private async Task SetupInfiniteScrollCollection()
         {
+            var characters = await GetCharactersAsync();
+            Characters = characters.ToInfiniteScrollCollection();
             Characters.OnLoadMore = async () => await LoadMoreCharactersAsync();
             Characters.OnCanLoadMore = () => Characters.Count <= App.MaxCharacters;
-            OnPropertyChanged(nameof(HasCharacters));
-            OnPropertyChanged(nameof(DoesNotHaveCharacters));
+            HasCharacters = Characters.Count > 0;
+            DoesNotHaveCharacters = Characters.Count == 0;
         }
         #endregion
     }

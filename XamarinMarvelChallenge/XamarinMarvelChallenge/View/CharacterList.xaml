@@ -23,16 +23,17 @@
             </StackLayout>
 
             <StackLayout>
-                <Label IsVisible="{Binding HasNotLoadedPage}" Text="{Binding LoadingMessage}"
+                <StackLayout IsVisible="{Binding HasNotLoadedPage}">
+                    <Label Text="{Binding LoadingMessage}"
                        HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-
+                </StackLayout>
+                
                 <StackLayout IsVisible="{Binding HasLoadedPage}">
                     <Label IsVisible="{Binding DoesNotHaveCharacters}" Text="There are not results"
-                       HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                           HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
                     <ListView x:Name="charactersListView" IsVisible="{Binding HasCharacters}"
                               HasUnevenRows="True" ItemsSource="{Binding Characters}" 
-                              CachingStrategy="RecycleElement" 
-                              IsPullToRefreshEnabled="True">
+                              CachingStrategy="RecycleElement">
                         <ListView.Behaviors>
                             <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
                         </ListView.Behaviors>
