@@ -8,7 +8,7 @@
         <StackLayout>
             <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="Black">
                 <Image Source="marvel_logo.png" HeightRequest="25"/>
-                <Entry Text="{Binding SearchText}" Placeholder="Search" 
+                <Entry Text="{Binding SearchText}" Placeholder="Search for characters" 
                        HorizontalOptions="FillAndExpand" ReturnType="Search"
                        BackgroundColor="Transparent" PlaceholderColor="LightGray" TextColor="White"
                        ReturnCommand="{Binding SearchCharacterCommand}" />
